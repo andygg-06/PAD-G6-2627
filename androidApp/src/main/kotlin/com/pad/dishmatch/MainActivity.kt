@@ -17,6 +17,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+//hola!!
 //hola
 @Preview
 @Composable
