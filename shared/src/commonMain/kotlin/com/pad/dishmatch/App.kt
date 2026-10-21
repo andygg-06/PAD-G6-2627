@@ -26,12 +26,19 @@ import org.jetbrains.compose.resources.painterResource
 import dishmatch.shared.generated.resources.Res
 import dishmatch.shared.generated.resources.compose_multiplatform
 
+import com.pad.dishmatch.features.restaurantes.presentation.RestaurantesScreenRoot
+import com.pad.dishmatch.features.restaurantes.presentation.RestaurantesViewModel
+import com.pad.dishmatch.features.conocer.presentation.ConocerScreenRoot
+import com.pad.dishmatch.features.conocer.presentation.ConocerViewModel
+
 @Composable
 @Preview
 
 fun App() {
     MaterialTheme {
         var pantallaActual by remember { mutableStateOf("principal") }
+        val restaurantesViewModel = remember { RestaurantesViewModel() }
+        val conocerViewModel = remember { ConocerViewModel() }
 
         when (pantallaActual) {
             "principal" -> PaginaPrincipal(
@@ -52,13 +59,15 @@ fun App() {
             "ajustes" -> AjustesScreen(
                 onVolverClick = { pantallaActual = "principal" }
             )
-            "restaurante" -> RestauranteScreen(
+            "restaurante" -> RestaurantesScreenRoot(
+                viewModel = restaurantesViewModel,
                 onVolverClick = { pantallaActual = "principal" }
             )
-            "perfil" -> PerfilScreen(
+            "perfil" ->PerfilScreen(
                 onVolverClick = { pantallaActual = "principal" }
             )
-            "conocer" -> ConocerScreen(
+            "conocer" -> ConocerScreenRoot(
+                viewModel = conocerViewModel,
                 onVolverClick = { pantallaActual = "principal" }
             )
         }
