@@ -4,9 +4,6 @@ enum class AdjPersonas(val adj: String) {
     BAJO("bajo"),
     ROMANTICO("romantico")
 
-
-
-
 }
 
 enum class AdjRestaurante(val adj: String){
