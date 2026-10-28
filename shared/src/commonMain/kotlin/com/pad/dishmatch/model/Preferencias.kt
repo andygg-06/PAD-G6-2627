@@ -1,3 +1,4 @@
+package com.pad.dishmatch.model
 enum class AdjPersonas(val adj: String) {
     FIESTERO("le gusta fiesta"),
     ALTO("alto"),

@@ -1,3 +1,4 @@
+package com.pad.dishmatch.model
 
 class Restaurante(
     val nom:String,

@@ -25,6 +25,10 @@ import org.jetbrains.compose.resources.painterResource
 
 import dishmatch.shared.generated.resources.Res
 import dishmatch.shared.generated.resources.compose_multiplatform
+import com.pad.dishmatch.model.Perfil
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 
 @Composable
 @Preview
@@ -32,6 +36,7 @@ import dishmatch.shared.generated.resources.compose_multiplatform
 fun App() {
     MaterialTheme {
         var pantallaActual by remember { mutableStateOf("principal") }
+        var perfil by remember { mutableStateOf(Perfil()) }
 
         when (pantallaActual) {
             "principal" -> PaginaPrincipal(
@@ -56,6 +61,8 @@ fun App() {
                 onVolverClick = { pantallaActual = "principal" }
             )
             "perfil" -> PerfilScreen(
+                perfil = perfil,
+                onGuardar = { perfil = it },
                 onVolverClick = { pantallaActual = "principal" }
             )
             "conocer" -> ConocerScreen(
