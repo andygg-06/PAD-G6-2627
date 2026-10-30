@@ -1,7 +1,7 @@
 package com.pad.dishmatch.model
-import AdjPersonas
-import AdjPlato
-import AdjRestaurante
+import com.pad.dishmatch.model.AdjPlato
+import com.pad.dishmatch.model.AdjPersonas
+import com.pad.dishmatch.model.AdjRestaurante
 import kotlinx.serialization.Serializable
 
 

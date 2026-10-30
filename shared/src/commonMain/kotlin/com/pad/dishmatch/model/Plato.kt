@@ -1,6 +1,8 @@
 package com.pad.dishmatch.model
 
-import AdjPlato
+import com.pad.dishmatch.model.AdjPlato
+import com.pad.dishmatch.model.AdjPersonas
+import com.pad.dishmatch.model.AdjRestaurante
 
 class Plato(
     val nom:String,
