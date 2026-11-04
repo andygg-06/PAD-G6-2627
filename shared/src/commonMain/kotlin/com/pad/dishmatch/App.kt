@@ -34,6 +34,15 @@ import com.pad.dishmatch.features.restaurantes.presentation.RestaurantesViewMode
 import com.pad.dishmatch.features.conocer.presentation.ConocerScreenRoot
 import com.pad.dishmatch.features.conocer.presentation.ConocerViewModel
 
+import com.pad.dishmatch.features.calendario.presentation.CalendarioScreenRoot
+import com.pad.dishmatch.features.calendario.presentation.CalendarioViewModel
+
+import com.pad.dishmatch.features.mapa.presentation.MapaScreenRoot
+import com.pad.dishmatch.features.mapa.presentation.MapaViewModel
+
+import com.pad.dishmatch.features.ajustes.presentation.AjustesScreenRoot
+import com.pad.dishmatch.features.ajustes.presentation.AjustesViewModel
+
 @Composable
 @Preview
 fun App() {
@@ -42,6 +51,9 @@ fun App() {
         var perfil by remember { mutableStateOf(Perfil()) }
         val restaurantesViewModel = remember { RestaurantesViewModel() }
         val conocerViewModel = remember { ConocerViewModel() }
+        val calendarioViewModel = remember { CalendarioViewModel() }
+        val mapaViewModel = remember { MapaViewModel() }
+        val ajustesViewModel = remember { AjustesViewModel() }
 
         when (pantallaActual) {
             "principal" -> PaginaPrincipal(
@@ -52,13 +64,16 @@ fun App() {
                 onIrRestaurante = { pantallaActual = "restaurante" },
                 onIrPerfil = { pantallaActual = "perfil" }
             )
-            "calendario" -> CalendarioScreen(
+            "calendario" -> CalendarioScreenRoot(
+                viewModel = calendarioViewModel,
                 onVolverClick = { pantallaActual = "principal" }
             )
-            "mapa" -> MapaScreen(
+            "mapa" -> MapaScreenRoot(
+                viewModel = mapaViewModel,
                 onVolverClick = { pantallaActual = "principal" }
             )
-            "ajustes" -> AjustesScreen(
+            "ajustes" -> AjustesScreenRoot(
+                viewModel = ajustesViewModel,
                 onVolverClick = { pantallaActual = "principal" }
             )
             "restaurante" -> RestaurantesScreenRoot(
