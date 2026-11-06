@@ -14,7 +14,7 @@ dependencies {
     implementation(project(":shared"))
 
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.work.runtime.ktx)
+    //implementation(libs.androidx.work.runtime.ktx)
 
 
 
@@ -22,7 +22,8 @@ dependencies {
     implementation(libs.compose.uiToolingPreview)
     debugImplementation(libs.compose.uiTooling)
     //notificacion
-    implementation(libs.worker.runtime)
+    //implementation(libs.worker.runtime)
+    implementation("androidx.work:work-runtime-ktx:2.10.0")
 }
 
 android {

@@ -1,10 +1,9 @@
 package com.pad.dishmatch.notifications
-
 import android.content.Context
-import android.provider.ContactsContract
-
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
-
 object Notification {
     fun scheduleNotification(
         context: Context,
@@ -12,10 +11,9 @@ object Notification {
         message: String,
         delaySeconds: Long
     ) {
-        val data = ContactsContract.Contacts.Data.Builder()
+        val data = Data.Builder()
             .putString("title", title)
             .putString("message", message)
-
             .build()
 
         val workRequest = OneTimeWorkRequestBuilder<NotificationWorker>()

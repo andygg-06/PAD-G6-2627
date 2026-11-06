@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
         Notification.scheduleNotification(
             context = this,
             title = "DishMatch",
-            message = "¡Ya sabes donde comeras mañana, vena  descubrirlo!",
+            message = "¡Ya sabes donde comeras mañana, ven a  descubrirlo!",
             delaySeconds = 5
         )
     }
