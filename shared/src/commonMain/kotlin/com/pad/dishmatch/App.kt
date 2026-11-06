@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pad.dishmatch.ui.home.PaginaPrincipal
-import com.pad.dishmatch.ui.home.PaginaPrincipal
 import org.jetbrains.compose.resources.painterResource
 
 import dishmatch.shared.generated.resources.Res
@@ -30,34 +29,55 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 
+import com.pad.dishmatch.features.restaurantes.presentation.RestaurantesScreenRoot
+import com.pad.dishmatch.features.restaurantes.presentation.RestaurantesViewModel
+import com.pad.dishmatch.features.conocer.presentation.ConocerScreenRoot
+import com.pad.dishmatch.features.conocer.presentation.ConocerViewModel
+
+import com.pad.dishmatch.features.calendario.presentation.CalendarioScreenRoot
+import com.pad.dishmatch.features.calendario.presentation.CalendarioViewModel
+
+import com.pad.dishmatch.features.mapa.presentation.MapaScreenRoot
+import com.pad.dishmatch.features.mapa.presentation.MapaViewModel
+
+import com.pad.dishmatch.features.ajustes.presentation.AjustesScreenRoot
+import com.pad.dishmatch.features.ajustes.presentation.AjustesViewModel
+
 @Composable
 @Preview
-
 fun App() {
     MaterialTheme {
         var pantallaActual by remember { mutableStateOf("principal") }
         var perfil by remember { mutableStateOf(Perfil()) }
+        val restaurantesViewModel = remember { RestaurantesViewModel() }
+        val conocerViewModel = remember { ConocerViewModel() }
+        val calendarioViewModel = remember { CalendarioViewModel() }
+        val mapaViewModel = remember { MapaViewModel() }
+        val ajustesViewModel = remember { AjustesViewModel() }
 
         when (pantallaActual) {
             "principal" -> PaginaPrincipal(
                 onIrCalendario = { pantallaActual = "calendario" },
                 onIrMapa = { pantallaActual = "mapa" },
-                onIrAjustes = { pantallaActual = "ajustes" } ,
-                        onIrConocer = { pantallaActual = "conocer" },
-                        onIrRestaurante = { pantallaActual = "restaurante" },
-                        onIrPerfil = { pantallaActual = "perfil" }
-
+                onIrAjustes = { pantallaActual = "ajustes" },
+                onIrConocer = { pantallaActual = "conocer" },
+                onIrRestaurante = { pantallaActual = "restaurante" },
+                onIrPerfil = { pantallaActual = "perfil" }
             )
-            "calendario" -> CalendarioScreen(
+            "calendario" -> CalendarioScreenRoot(
+                viewModel = calendarioViewModel,
                 onVolverClick = { pantallaActual = "principal" }
             )
-            "mapa" -> MapaScreen(
+            "mapa" -> MapaScreenRoot(
+                viewModel = mapaViewModel,
                 onVolverClick = { pantallaActual = "principal" }
             )
-            "ajustes" -> AjustesScreen(
+            "ajustes" -> AjustesScreenRoot(
+                viewModel = ajustesViewModel,
                 onVolverClick = { pantallaActual = "principal" }
             )
-            "restaurante" -> RestauranteScreen(
+            "restaurante" -> RestaurantesScreenRoot(
+                viewModel = restaurantesViewModel,
                 onVolverClick = { pantallaActual = "principal" }
             )
             "perfil" -> PerfilScreen(
@@ -65,7 +85,8 @@ fun App() {
                 onGuardar = { perfil = it },
                 onVolverClick = { pantallaActual = "principal" }
             )
-            "conocer" -> ConocerScreen(
+            "conocer" -> ConocerScreenRoot(
+                viewModel = conocerViewModel,
                 onVolverClick = { pantallaActual = "principal" }
             )
         }
