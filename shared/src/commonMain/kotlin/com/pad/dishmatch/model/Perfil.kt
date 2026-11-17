@@ -16,7 +16,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Perfil(
     val id: String = "",
-    val email: String,
     val nombre: String = "",
     val edad: Int = 0,
     val biografia: String = "",
