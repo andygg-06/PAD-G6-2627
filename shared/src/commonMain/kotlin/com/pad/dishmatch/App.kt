@@ -31,7 +31,6 @@ import androidx.compose.runtime.mutableStateOf
 
 import com.pad.dishmatch.features.restaurantes.presentation.RestaurantesScreenRoot
 import com.pad.dishmatch.features.restaurantes.presentation.RestaurantesViewModel
-import com.pad.dishmatch.features.conocer.presentation.ConocerScreenRoot
 import com.pad.dishmatch.features.conocer.presentation.ConocerViewModel
 
 import com.pad.dishmatch.features.calendario.presentation.CalendarioScreenRoot
@@ -85,8 +84,8 @@ fun App() {
                 onGuardar = { perfil = it },
                 onVolverClick = { pantallaActual = "principal" }
             )
-            "conocer" -> ConocerScreenRoot(
-                viewModel = conocerViewModel,
+            "conocer" -> ConocerScreen(
+                miPerfil = perfil,
                 onVolverClick = { pantallaActual = "principal" }
             )
         }

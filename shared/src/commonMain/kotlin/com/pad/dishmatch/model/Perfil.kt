@@ -7,7 +7,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Perfil(
+    val id: String = "",
     val nombre: String = "",
+    val edad: Int = 0,
     val biografia: String = "",
     val foto: String? = null,
     val dieta: Set<AdjPlato> = emptySet<AdjPlato>(),
