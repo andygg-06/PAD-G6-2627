@@ -103,28 +103,32 @@ fun RestauranteScreen(
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        if (!soloAptos) {
-            OutlinedTextField(texto, { texto = it }, label = { Text("Buscar") },
-                singleLine = true, modifier = Modifier.fillMaxWidth())
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                for (e in AdjRestaurante.entries) {
-                    FilterChip(selected = estilo == e,
-                        onClick = { estilo = if (estilo == e) null else e },
-                        label = { Text(e.adj) })
-                }
-            }
-        }
+        OutlinedButton(onClick = {
+            if (abierto != null) abierto = null else onVolverClick()
+        }) { Text("← Volver") }
+
         if (persona != null) Text("Quedada con ${persona.nombre}: restaurantes recomendados")
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Switch(
+                checked = soloAptos,
+                onCheckedChange = { soloAptos = it; texto = ""; estilo = null }
+            )
+            Spacer(Modifier.width(8.dp))
+            Text("Solo los que encajan con mi perfil")
+        }
 
         val r = abierto
         if (r == null) {
-            OutlinedTextField(texto, { texto = it }, label = { Text("Buscar") },
-                singleLine = true, modifier = Modifier.fillMaxWidth())
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                for (e in AdjRestaurante.entries) {
-                    FilterChip(selected = estilo == e,
-                        onClick = { estilo = if (estilo == e) null else e },
-                        label = { Text(e.adj) })
+            if (!soloAptos) {
+                OutlinedTextField(texto, { texto = it }, label = { Text("Buscar") },
+                    singleLine = true, modifier = Modifier.fillMaxWidth())
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    for (e in AdjRestaurante.entries) {
+                        FilterChip(selected = estilo == e,
+                            onClick = { estilo = if (estilo == e) null else e },
+                            label = { Text(e.adj) })
+                    }
                 }
             }
             for (rest in lista) {
