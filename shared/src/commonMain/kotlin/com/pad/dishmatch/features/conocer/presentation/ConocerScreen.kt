@@ -28,7 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 
-private val candidatos = listOf(
+val candidatos = listOf(
     Perfil(
         id = "c1", nombre = "Laura M.", edad = 21,
         biografia = "Fanática del ramen y la comida asiática.",
@@ -46,7 +46,11 @@ private val candidatos = listOf(
 )
 
 @Composable
-fun ConocerScreen(miPerfil: Perfil, onVolverClick: () -> Unit) {
+fun ConocerScreen(
+    miPerfil: Perfil,
+    onVolverClick: () -> Unit,
+    onQuedar: (Perfil) -> Unit
+) {
     var indice by remember { mutableStateOf(0) }
     var filtro by remember { mutableStateOf<AdjPlato?>(null) }
     var mensaje by remember { mutableStateOf<String?>(null) }
@@ -117,10 +121,7 @@ fun ConocerScreen(miPerfil: Perfil, onVolverClick: () -> Unit) {
 
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         OutlinedButton(onClick = { indice++; mensaje = null }) { Text("Pasar") }
-                        Button(onClick = {
-                            mensaje = "¡Propuesta enviada a ${actual.nombre}!"
-                            indice++
-                        }) { Text("🍽️¡Quedar!") }
+                        Button(onClick = { onQuedar(actual) }) { Text("🍽️¡Quedar!") }
                     }
                 }
             }

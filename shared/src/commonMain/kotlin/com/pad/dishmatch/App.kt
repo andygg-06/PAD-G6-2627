@@ -25,12 +25,12 @@ import org.jetbrains.compose.resources.painterResource
 import dishmatch.shared.generated.resources.Res
 import dishmatch.shared.generated.resources.compose_multiplatform
 import com.pad.dishmatch.model.Perfil
+import com.pad.dishmatch.model.Restaurante
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 
-import com.pad.dishmatch.features.restaurantes.presentation.RestaurantesScreenRoot
-import com.pad.dishmatch.features.restaurantes.presentation.RestaurantesViewModel
 
 import com.pad.dishmatch.features.calendario.presentation.CalendarioScreenRoot
 import com.pad.dishmatch.features.calendario.presentation.CalendarioViewModel
@@ -40,6 +40,7 @@ import com.pad.dishmatch.features.mapa.presentation.MapaViewModel
 
 import com.pad.dishmatch.features.ajustes.presentation.AjustesScreenRoot
 import com.pad.dishmatch.features.ajustes.presentation.AjustesViewModel
+import com.pad.dishmatch.features.restaurantes.presentation.RestauranteScreen
 
 @Composable
 @Preview
@@ -47,10 +48,12 @@ fun App() {
     MaterialTheme {
         var pantallaActual by remember { mutableStateOf("principal") }
         var perfil by remember { mutableStateOf(Perfil()) }
-        val restaurantesViewModel = remember { RestaurantesViewModel() }
         val calendarioViewModel = remember { CalendarioViewModel() }
         val mapaViewModel = remember { MapaViewModel() }
         val ajustesViewModel = remember { AjustesViewModel() }
+        //variables que nos serviran para pasar entre pantallas
+        var personaElegida by remember { mutableStateOf<Perfil?>(null) }
+        var restauranteElegido by remember { mutableStateOf<Restaurante?>(null) }
 
         when (pantallaActual) {
             "principal" -> PaginaPrincipal(
@@ -73,18 +76,23 @@ fun App() {
                 viewModel = ajustesViewModel,
                 onVolverClick = { pantallaActual = "principal" }
             )
-            "restaurante" -> RestaurantesScreenRoot(
-                viewModel = restaurantesViewModel,
-                onVolverClick = { pantallaActual = "principal" }
+
+            "restaurante" -> RestauranteScreen(
+                miPerfil = perfil,
+                persona = personaElegida,
+                onVolverClick = { personaElegida = null; pantallaActual = "principal" },
+                onElegir = { restauranteElegido = it; pantallaActual = "principal" }
             )
             "perfil" -> PerfilScreen(
                 perfil = perfil,
                 onGuardar = { perfil = it },
                 onVolverClick = { pantallaActual = "principal" }
             )
+
             "conocer" -> ConocerScreen(
                 miPerfil = perfil,
-                onVolverClick = { pantallaActual = "principal" }
+                onVolverClick = { pantallaActual = "principal" },
+                onQuedar = { personaElegida = it; pantallaActual = "restaurante" }
             )
         }
     }
