@@ -31,7 +31,6 @@ import androidx.compose.runtime.mutableStateOf
 
 import com.pad.dishmatch.features.restaurantes.presentation.RestaurantesScreenRoot
 import com.pad.dishmatch.features.restaurantes.presentation.RestaurantesViewModel
-import com.pad.dishmatch.features.conocer.presentation.ConocerViewModel
 
 import com.pad.dishmatch.features.calendario.presentation.CalendarioScreenRoot
 import com.pad.dishmatch.features.calendario.presentation.CalendarioViewModel
@@ -49,7 +48,6 @@ fun App() {
         var pantallaActual by remember { mutableStateOf("principal") }
         var perfil by remember { mutableStateOf(Perfil()) }
         val restaurantesViewModel = remember { RestaurantesViewModel() }
-        val conocerViewModel = remember { ConocerViewModel() }
         val calendarioViewModel = remember { CalendarioViewModel() }
         val mapaViewModel = remember { MapaViewModel() }
         val ajustesViewModel = remember { AjustesViewModel() }
