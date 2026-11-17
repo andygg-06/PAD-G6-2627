@@ -42,58 +42,79 @@ import com.pad.dishmatch.features.ajustes.presentation.AjustesScreenRoot
 import com.pad.dishmatch.features.ajustes.presentation.AjustesViewModel
 import com.pad.dishmatch.features.restaurantes.presentation.RestauranteScreen
 
+import androidx.compose.material3.Surface
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
-        var pantallaActual by remember { mutableStateOf("principal") }
-        var perfil by remember { mutableStateOf(Perfil()) }
-        val calendarioViewModel = remember { CalendarioViewModel() }
-        val mapaViewModel = remember { MapaViewModel() }
-        val ajustesViewModel = remember { AjustesViewModel() }
-        //variables que nos serviran para pasar entre pantallas
-        var personaElegida by remember { mutableStateOf<Perfil?>(null) }
-        var restauranteElegido by remember { mutableStateOf<Restaurante?>(null) }
+    // Lo de tu compañera: el tema depende de los ajustes
+    val ajustesViewModel = remember { AjustesViewModel() }
+    val ajustesState by ajustesViewModel.state.collectAsStateWithLifecycle()
 
-        when (pantallaActual) {
-            "principal" -> PaginaPrincipal(
-                onIrCalendario = { pantallaActual = "calendario" },
-                onIrMapa = { pantallaActual = "mapa" },
-                onIrAjustes = { pantallaActual = "ajustes" },
-                onIrConocer = { pantallaActual = "conocer" },
-                onIrRestaurante = { pantallaActual = "restaurante" },
-                onIrPerfil = { pantallaActual = "perfil" }
-            )
-            "calendario" -> CalendarioScreenRoot(
-                viewModel = calendarioViewModel,
-                onVolverClick = { pantallaActual = "principal" }
-            )
-            "mapa" -> MapaScreenRoot(
-                viewModel = mapaViewModel,
-                onVolverClick = { pantallaActual = "principal" }
-            )
-            "ajustes" -> AjustesScreenRoot(
-                viewModel = ajustesViewModel,
-                onVolverClick = { pantallaActual = "principal" }
-            )
+    val colores = if (ajustesState.ajustes.temaOscuro) {
+        darkColorScheme()
+    } else {
+        lightColorScheme()
+    }
 
-            "restaurante" -> RestauranteScreen(
-                miPerfil = perfil,
-                persona = personaElegida,
-                onVolverClick = { personaElegida = null; pantallaActual = "principal" },
-                onElegir = { restauranteElegido = it; pantallaActual = "principal" }
-            )
-            "perfil" -> PerfilScreen(
-                perfil = perfil,
-                onGuardar = { perfil = it },
-                onVolverClick = { pantallaActual = "principal" }
-            )
+    MaterialTheme(colorScheme = colores) {
+        Surface(modifier = Modifier.fillMaxSize()) {
+            var pantallaActual by remember { mutableStateOf("principal") }
+            var perfil by remember { mutableStateOf(Perfil()) }
+            val calendarioViewModel = remember { CalendarioViewModel() }
+            val mapaViewModel = remember { MapaViewModel() }
 
-            "conocer" -> ConocerScreen(
-                miPerfil = perfil,
-                onVolverClick = { pantallaActual = "principal" },
-                onQuedar = { personaElegida = it; pantallaActual = "restaurante" }
-            )
+            // Variables para pasar datos entre pantallas
+            var personaElegida by remember { mutableStateOf<Perfil?>(null) }
+            var restauranteElegido by remember { mutableStateOf<Restaurante?>(null) }
+
+            when (pantallaActual) {
+                "principal" -> PaginaPrincipal(
+                    onIrCalendario = { pantallaActual = "calendario" },
+                    onIrMapa = { pantallaActual = "mapa" },
+                    onIrAjustes = { pantallaActual = "ajustes" },
+                    onIrConocer = { pantallaActual = "conocer" },
+                    onIrRestaurante = { pantallaActual = "restaurante" },
+                    onIrPerfil = { pantallaActual = "perfil" }
+                )
+
+                "calendario" -> CalendarioScreenRoot(
+                    viewModel = calendarioViewModel,
+                    onVolverClick = { pantallaActual = "principal" }
+                )
+
+                "mapa" -> MapaScreenRoot(
+                    viewModel = mapaViewModel,
+                    onVolverClick = { pantallaActual = "principal" }
+                )
+
+                "ajustes" -> AjustesScreenRoot(
+                    viewModel = ajustesViewModel,
+                    onVolverClick = { pantallaActual = "principal" }
+                )
+
+                "restaurante" -> RestauranteScreen(
+                    miPerfil = perfil,
+                    persona = personaElegida,
+                    onVolverClick = { personaElegida = null; pantallaActual = "principal" },
+                    onElegir = { restauranteElegido = it; pantallaActual = "principal" }
+                )
+
+                "perfil" -> PerfilScreen(
+                    perfil = perfil,
+                    onGuardar = { perfil = it },
+                    onVolverClick = { pantallaActual = "principal" }
+                )
+
+                "conocer" -> ConocerScreen(
+                    miPerfil = perfil,
+                    onVolverClick = { pantallaActual = "principal" },
+                    onQuedar = { personaElegida = it; pantallaActual = "restaurante" }
+                )
+            }
         }
     }
 }
