@@ -11,6 +11,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +26,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+
 private val candidatos = listOf(
     Perfil(
         id = "c1", nombre = "Laura M.", edad = 21,
@@ -47,32 +50,57 @@ fun ConocerScreen(miPerfil: Perfil, onVolverClick: () -> Unit) {
     var indice by remember { mutableStateOf(0) }
     var filtro by remember { mutableStateOf<AdjPlato?>(null) }
     var mensaje by remember { mutableStateOf<String?>(null) }
-
-    val lista = if (filtro == null) candidatos else candidatos.filter { filtro in it.dieta }
+    //nuevo, para elegir el filtro
+    var usarPerfil by remember { mutableStateOf(false) }
+    val lista = if (usarPerfil) {
+        candidatos.filter { c ->
+            val encajaPersonalidad =
+                miPerfil.busco.isEmpty() || c.personalidad.intersect(miPerfil.busco).isNotEmpty()
+            val encajaDieta =
+                miPerfil.dieta.isEmpty() || c.dieta.intersect(miPerfil.dieta).isNotEmpty()
+            encajaPersonalidad && encajaDieta
+        }
+    } else if (filtro == null) {
+        candidatos
+    } else {
+        candidatos.filter { filtro in it.dieta }
+    }
     val actual = lista.getOrNull(indice)
+
+
 
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        OutlinedButton(onClick = onVolverClick) { Text("← Volver") }
+        OutlinedButton(onClick = onVolverClick) { Text("<- Volver") }
 
-        Text("Filtrar por dieta:")
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            for (d in listOf(AdjPlato.VEGANO, AdjPlato.VEGETARIANO, AdjPlato.PROTEINA)) {
-                FilterChip(
-                    selected = filtro == d,
-                    onClick = { filtro = if (filtro == d) null else d; indice = 0 },
-                    label = { Text(d.adj) }
-                )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Switch(
+                checked = usarPerfil,
+                onCheckedChange = { usarPerfil = it; indice = 0 }
+            )
+            Text("Usar los gustos de mi perfil")
+        }
+        if (!usarPerfil) {
+            Text("Filtrar por dieta:")
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                for (d in listOf(AdjPlato.VEGANO, AdjPlato.VEGETARIANO, AdjPlato.PROTEINA)) {
+                    FilterChip(
+                        selected = filtro == d,
+                        onClick = { filtro = if (filtro == d) null else d; indice = 0 },
+                        label = { Text(d.adj) }
+                    )
+                }
             }
         }
+
 
         val aviso = mensaje
         if (aviso != null) Text(aviso)
 
         if (actual == null) {
-            Text("¡Has visto a todos!")
+            Text("Ya has visto a todos, no te pases de ligón")
             Button(onClick = { indice = 0; mensaje = null }) { Text("Volver a ver") }
         } else {
             Card(modifier = Modifier.fillMaxWidth()) {
@@ -83,16 +111,16 @@ fun ConocerScreen(miPerfil: Perfil, onVolverClick: () -> Unit) {
                     Text("Dieta: " + actual.dieta.joinToString { it.adj })
                     Text("Personalidad: " + actual.personalidad.joinToString { it.adj })
 
-                    // Aquí se conecta con TU perfil
+                    //aquí se conecta con el perfil
                     val coincidencias = actual.dieta.intersect(miPerfil.dieta).size
                     Text("Coincidís en $coincidencias gustos de dieta")
 
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         OutlinedButton(onClick = { indice++; mensaje = null }) { Text("Pasar") }
                         Button(onClick = {
-                            mensaje = "¡Propuesta enviada a ${actual.nombre}! 🍽️"
+                            mensaje = "¡Propuesta enviada a ${actual.nombre}!"
                             indice++
-                        }) { Text("🍽️ ¡Quedar!") }
+                        }) { Text("🍽️¡Quedar!") }
                     }
                 }
             }
