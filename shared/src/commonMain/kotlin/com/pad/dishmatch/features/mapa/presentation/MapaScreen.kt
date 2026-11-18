@@ -52,29 +52,28 @@ fun MapaScreen(
 ) {
     Scaffold(
         topBar = {
-            Row(
+            // El boton arriba y el titulo debajo: asi el titulo nunca
+            // se queda sin sitio ni se mete debajo del boton
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 8.dp)
             ) {
                 OutlinedButton(onClick = onVolverClick) {
                     Text("← Volver")
                 }
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = "MAPA DE RESTAURANTES Y CITAS",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 17.sp
-                    )
-                    Text(
-                        text = "Madrid Centro • Radio: ${state.filtroDistanciaMax}m",
-                        fontSize = 12.sp,
-                        color = Color.Gray
-                    )
-                }
-                Spacer(modifier = Modifier.width(60.dp))
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = "Mapa de restaurantes y citas",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = "Madrid Centro • Radio: ${state.filtroDistanciaMax}m",
+                    fontSize = 13.sp,
+                    color = Color.Gray
+                )
             }
         }
     ) { paddingValues ->
@@ -91,20 +90,22 @@ fun MapaScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    // Etiquetas cortas: las largas no caben en una fila
+                    // y el chip se parte en tres lineas
                     FilterChip(
                         selected = state.filtroDistanciaMax == 2000,
                         onClick = { onAction(MapaAction.CambiarFiltroDistancia(2000)) },
-                        label = { Text("Todos (< 2 km)") }
+                        label = { Text("< 2 km", maxLines = 1) }
                     )
                     FilterChip(
                         selected = state.filtroDistanciaMax == 700,
                         onClick = { onAction(MapaAction.CambiarFiltroDistancia(700)) },
-                        label = { Text("Cercanos (< 700m)") }
+                        label = { Text("< 700 m", maxLines = 1) }
                     )
                     FilterChip(
                         selected = state.filtroDistanciaMax == 400,
                         onClick = { onAction(MapaAction.CambiarFiltroDistancia(400)) },
-                        label = { Text("Muy cerca (< 400m)") }
+                        label = { Text("< 400 m", maxLines = 1) }
                     )
                 }
             }
