@@ -1,51 +1,32 @@
 package com.pad.dishmatch
 
-import CalendarioScreen
+
 import ConocerScreen
-import MapaScreen
 import PerfilScreen
-import RestauranteScreen
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.pad.dishmatch.ui.home.PaginaPrincipal
-import org.jetbrains.compose.resources.painterResource
-
-import dishmatch.shared.generated.resources.Res
-import dishmatch.shared.generated.resources.compose_multiplatform
-import com.pad.dishmatch.model.Perfil
-import com.pad.dishmatch.model.Restaurante
-
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
-
-
-import com.pad.dishmatch.features.calendario.presentation.CalendarioScreenRoot
-import com.pad.dishmatch.features.calendario.presentation.CalendarioViewModel
-
-import com.pad.dishmatch.features.mapa.presentation.MapaScreenRoot
-import com.pad.dishmatch.features.mapa.presentation.MapaViewModel
-
-import com.pad.dishmatch.features.ajustes.presentation.AjustesScreenRoot
-import com.pad.dishmatch.features.ajustes.presentation.AjustesViewModel
-import com.pad.dishmatch.features.restaurantes.presentation.RestauranteScreen
-
 import androidx.compose.material3.Surface
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.pad.dishmatch.features.ajustes.presentation.AjustesScreenRoot
+import com.pad.dishmatch.features.ajustes.presentation.AjustesViewModel
+import com.pad.dishmatch.features.calendario.presentation.CalendarioScreenRoot
+import com.pad.dishmatch.features.calendario.presentation.CalendarioViewModel
+import com.pad.dishmatch.features.mapa.presentation.MapaScreenRoot
+import com.pad.dishmatch.features.mapa.presentation.MapaViewModel
+import com.pad.dishmatch.features.restaurantes.presentation.RestauranteScreen
+import com.pad.dishmatch.model.Perfil
+import com.pad.dishmatch.model.Restaurante
+import com.pad.dishmatch.ui.home.PaginaPrincipal
 
 @Composable
 @Preview
