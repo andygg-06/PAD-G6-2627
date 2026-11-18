@@ -1,13 +1,9 @@
 package com.pad.dishmatch
 
-
 import ConocerScreen
 import PerfilScreen
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,6 +23,7 @@ import com.pad.dishmatch.features.restaurantes.presentation.RestauranteScreen
 import com.pad.dishmatch.model.Perfil
 import com.pad.dishmatch.model.Restaurante
 import com.pad.dishmatch.ui.home.PaginaPrincipal
+import com.pad.dishmatch.ui.theme.TemaDishMatch
 
 @Composable
 @Preview
@@ -35,13 +32,7 @@ fun App(toScreen: String? = null) {
     val ajustesViewModel = remember { AjustesViewModel() }
     val ajustesState by ajustesViewModel.state.collectAsStateWithLifecycle()
 
-    val colores = if (ajustesState.ajustes.temaOscuro) {
-        darkColorScheme()
-    } else {
-        lightColorScheme()
-    }
-
-    MaterialTheme(colorScheme = colores) {
+    TemaDishMatch(oscuro = ajustesState.ajustes.temaOscuro) {
         Surface(modifier = Modifier.fillMaxSize()) {
             // Si venimos de una notificación, empezamos en esa pantalla
             var pantallaActual by remember { mutableStateOf(toScreen ?: "principal") }

@@ -49,22 +49,22 @@ fun CalendarioScreen(
 ) {
     Scaffold(
         topBar = {
-            Row(
+            // El boton arriba y el titulo debajo: asi el titulo nunca
+            // se queda sin sitio ni se mete debajo del boton
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 8.dp)
             ) {
                 OutlinedButton(onClick = onVolverClick) {
                     Text("← Volver")
                 }
+                Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = "TU CALENDARIO DE CITAS",
+                    text = "Tu calendario de citas",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
+                    fontSize = 24.sp
                 )
-                Spacer(modifier = Modifier.width(60.dp))
             }
         }
     ) { paddingValues ->
