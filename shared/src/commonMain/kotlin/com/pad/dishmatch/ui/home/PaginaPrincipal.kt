@@ -27,7 +27,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
-import com.pad.dishmatch.AjustesScreen
 import dishmatch.shared.generated.resources.ajustes
 import dishmatch.shared.generated.resources.mapa
 import org.jetbrains.compose.resources.painterResource
