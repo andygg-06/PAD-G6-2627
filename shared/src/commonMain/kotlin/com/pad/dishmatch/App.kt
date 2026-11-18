@@ -49,8 +49,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 @Preview
-fun App() {
-    // Lo de tu compañera: el tema depende de los ajustes
+fun App(toScreen: String? = null) {
+    // El tema depende de los ajustes
     val ajustesViewModel = remember { AjustesViewModel() }
     val ajustesState by ajustesViewModel.state.collectAsStateWithLifecycle()
 
@@ -62,7 +62,14 @@ fun App() {
 
     MaterialTheme(colorScheme = colores) {
         Surface(modifier = Modifier.fillMaxSize()) {
-            var pantallaActual by remember { mutableStateOf("principal") }
+            // Si venimos de una notificación, empezamos en esa pantalla
+            var pantallaActual by remember { mutableStateOf(toScreen ?: "principal") }
+
+            // Si la app ya estaba abierta, la notificación cambia la pantalla aquí
+            LaunchedEffect(toScreen) {
+                toScreen?.let { pantallaActual = it }
+            }
+
             var perfil by remember { mutableStateOf(Perfil()) }
             val calendarioViewModel = remember { CalendarioViewModel() }
             val mapaViewModel = remember { MapaViewModel() }
