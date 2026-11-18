@@ -41,8 +41,8 @@ fun App(toScreen: String? = null) {
             LaunchedEffect(toScreen) {
                 toScreen?.let { pantallaActual = it }
             }
-
-            var perfil by remember { mutableStateOf(Perfil()) }
+            var perfil by remember { mutableStateOf(PerfilStorage.cargar()) }
+            //var perfil by remember { mutableStateOf(Perfil()) } antiguo, ahora para que se guarde
             val calendarioViewModel = remember { CalendarioViewModel() }
             val mapaViewModel = remember { MapaViewModel() }
 
@@ -84,7 +84,7 @@ fun App(toScreen: String? = null) {
 
                 "perfil" -> PerfilScreen(
                     perfil = perfil,
-                    onGuardar = { perfil = it },
+                    onGuardar = { perfil = it; PerfilStorage.guardar(it) },
                     onVolverClick = { pantallaActual = "principal" }
                 )
 
