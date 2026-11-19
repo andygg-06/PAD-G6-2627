@@ -15,6 +15,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pad.dishmatch.features.ajustes.presentation.AjustesScreenRoot
 import com.pad.dishmatch.features.ajustes.presentation.AjustesViewModel
+import com.pad.dishmatch.features.autentificacion.data.AuthRepositoryImpl
+import com.pad.dishmatch.features.autentificacion.domain.ResultadoAuth
+import com.pad.dishmatch.features.autentificacion.presentation.LoginScreen
+import com.pad.dishmatch.features.autentificacion.presentation.RegistroScreen
 import com.pad.dishmatch.features.calendario.presentation.CalendarioScreenRoot
 import com.pad.dishmatch.features.calendario.presentation.CalendarioViewModel
 import com.pad.dishmatch.features.mapa.presentation.MapaScreenRoot
@@ -37,15 +41,24 @@ fun App(toScreen: String? = null) {
 
     TemaDishMatch(oscuro = ajustesState.ajustes.temaOscuro) {
         Surface(modifier = Modifier.fillMaxSize()) {
-            // Si venimos de una notificación, empezamos en esa pantalla
-            var pantallaActual by remember { mutableStateOf(toScreen ?: "principal") }
 
-            // Si la app ya estaba abierta, la notificación cambia la pantalla aquí
-            LaunchedEffect(toScreen) {
-                toScreen?.let { pantallaActual = it }
+            // Autentificacion del usuario
+            val auth = remember { AuthRepositoryImpl() }
+            var cuenta by remember { mutableStateOf(auth.cuentaActual()) }
+
+            // Sin sesión empezamos en login; con sesion, en la pantalla de la notificacion o en principal
+            var pantallaActual by remember {
+                mutableStateOf(if (cuenta == null) "login" else (toScreen ?: "principal"))
             }
-            var perfil by remember { mutableStateOf(PerfilStorage.cargar()) }
-            //var perfil by remember { mutableStateOf(Perfil()) } antiguo, ahora para que se guarde
+
+            // Si la app ya estaba abierta, la notificacion cambia la pantalla (solo con sesión iniciada)
+            LaunchedEffect(toScreen) {
+                if (cuenta != null) toScreen?.let { pantallaActual = it }
+            }
+
+            // El perfil cuelga de la cuenta (ya no se usa PerfilStorage)
+            var perfil by remember { mutableStateOf(cuenta?.perfil ?: Perfil()) }
+
             val calendarioViewModel = remember { CalendarioViewModel() }
             val mapaViewModel = remember { MapaViewModel() }
 
@@ -54,7 +67,38 @@ fun App(toScreen: String? = null) {
             var personaElegida by remember { mutableStateOf<Perfil?>(null) }
             var restauranteElegido by remember { mutableStateOf<Restaurante?>(null) }
             var citas by remember { mutableStateOf(listOf<Cita>()) }
+
             when (pantallaActual) {
+                "login" -> LoginScreen(
+                    onLogin = { email, pass ->
+                        when (val r = auth.iniciarSesion(email, pass)) {
+                            is ResultadoAuth.Exito -> {
+                                cuenta = r.cuenta
+                                perfil = r.cuenta.perfil
+                                pantallaActual = "principal"
+                                null
+                            }
+                            is ResultadoAuth.Fallo -> r.mensaje
+                        }
+                    },
+                    onIrRegistro = { pantallaActual = "registro" }
+                )
+
+                "registro" -> RegistroScreen(
+                    onRegistrar = { nombre, email, pass, consentimientoSalud ->
+                        when (val r = auth.registrar(email, pass, Perfil(nombre = nombre), consentimientoSalud)) {
+                            is ResultadoAuth.Exito -> {
+                                cuenta = r.cuenta
+                                perfil = r.cuenta.perfil
+                                pantallaActual = "perfil" // completar preferencias
+                                null
+                            }
+                            is ResultadoAuth.Fallo -> r.mensaje
+                        }
+                    },
+                    onVolverLogin = { pantallaActual = "login" }
+                )
+
                 "principal" -> PaginaPrincipal(
                     onIrCalendario = { pantallaActual = "calendario" },
                     onIrMapa = { pantallaActual = "mapa" },
@@ -82,7 +126,7 @@ fun App(toScreen: String? = null) {
 
                 "perfil" -> PerfilScreen(
                     perfil = perfil,
-                    onGuardar = { perfil = it; PerfilStorage.guardar(it) },
+                    onGuardar = { perfil = it; auth.actualizarPerfil(it) },
                     onVolverClick = { pantallaActual = "principal" }
                 )
 

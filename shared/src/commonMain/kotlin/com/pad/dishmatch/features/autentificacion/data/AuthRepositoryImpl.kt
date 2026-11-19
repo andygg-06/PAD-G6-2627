@@ -7,7 +7,7 @@ import com.pad.dishmatch.features.autentificacion.domain.ResultadoAuth
 import com.pad.dishmatch.model.Perfil
 import com.russhwolf.settings.Settings
 import kotlinx.serialization.json.Json
-import org.kotlincrypto.hash.sha2.SHA256
+import org.kotlincrypto.hash.sha2.SHA256 // para poder pasar la contraseña a hash
 import kotlin.random.Random
 
 
