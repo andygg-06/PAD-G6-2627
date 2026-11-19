@@ -186,68 +186,6 @@ fun AjustesScreen(
                 }
             }
 
-            // SECCIÓN: BÚSQUEDA Y RADAR
-            item {
-                Text(
-                    text = "PREFERENCIAS DE BÚSQUEDA",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-
-            item {
-                Card(modifier = Modifier.fillMaxWidth()) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Radio máximo de búsqueda", fontWeight = FontWeight.SemiBold)
-                            Text(
-                                text = "${state.ajustes.radioBusquedaKm.toInt()} km",
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Slider(
-                            value = state.ajustes.radioBusquedaKm,
-                            onValueChange = { onAction(AjustesAction.CambiarRadioBusqueda(it)) },
-                            valueRange = 1f..20f,
-                            steps = 18
-                        )
-                        Text(
-                            text = "Filtra restaurantes y personas afines dentro de este rango",
-                            fontSize = 12.sp,
-                            color = Color.Gray
-                        )
-                    }
-                }
-            }
-
-            // SECCIÓN: ACERCA DE
-            item {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = "DishMatch v1.0 • Hito 2",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Programación de Aplicaciones para Dispositivos Móviles\nUniversidad Complutense de Madrid • Grupo 06",
-                            fontSize = 12.sp,
-                            color = Color.Gray
-                        )
-                    }
-                }
-            }
-
             // BOTÓN RESTABLECER
             item {
                 Row(
