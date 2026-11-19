@@ -26,7 +26,20 @@ class MainActivity : ComponentActivity() {
         toScreen = pantallaDesdeIntent(intent)
 
         setContent {
-            App(toScreen = toScreen)
+            App(
+                toScreen = toScreen,
+                // La parte de Android del recordatorio: el codigo de WorkManager
+                // se queda aqui y el modulo compartido solo llama a esta funcion
+                onProgramarRecordatorio = { titulo, mensaje ->
+                    Notification.scheduleNotification(
+                        context = applicationContext,
+                        title = titulo,
+                        message = mensaje,
+                        delaySeconds = 10,
+                        toScreen = "calendario"
+                    )
+                }
+            )
         }
     }
 
@@ -34,17 +47,6 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         toScreen = pantallaDesdeIntent(intent)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Notification.scheduleNotification(
-            context = applicationContext,
-            title = "DishMatch",
-            message = "¿Ya sabes dónde comerás? Mira tu calendario",
-            delaySeconds = 5,
-            toScreen = "calendario"
-        )
     }
 
     private fun pantallaDesdeIntent(intent: Intent?): String? =

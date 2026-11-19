@@ -27,14 +27,22 @@ import com.pad.dishmatch.features.restaurantes.presentation.RestauranteScreen
 import com.pad.dishmatch.features.restaurantes.presentation.RecomendacionPlatoScreen
 import com.pad.dishmatch.model.Perfil
 import com.pad.dishmatch.model.Restaurante
-import com.pad.dishmatch.model.Cita
 
 import com.pad.dishmatch.ui.home.PaginaPrincipal
 import com.pad.dishmatch.ui.theme.TemaDishMatch
 
+/**
+ * onProgramarRecordatorio: lo rellena cada plataforma. En Android lo pasa
+ * MainActivity con WorkManager; en escritorio y web no se pasa nada y no hace nada.
+ * Asi el codigo de notificaciones se queda en androidApp y commonMain no depende de el.
+ */
 @Composable
 @Preview
-fun App(toScreen: String? = null) {
+fun App(
+    toScreen: String? = null,
+    onProgramarRecordatorio: (titulo: String, mensaje: String) -> Unit = { _, _ -> },
+    onPantallaAbierta: () -> Unit = {}
+) {
     // El tema depende de los ajustes
     val ajustesViewModel = remember { AjustesViewModel() }
     val ajustesState by ajustesViewModel.state.collectAsStateWithLifecycle()
@@ -52,8 +60,13 @@ fun App(toScreen: String? = null) {
             }
 
             // Si la app ya estaba abierta, la notificacion cambia la pantalla (solo con sesión iniciada)
+            // Hay que avisar de que ya se ha usado: si no, al tocar una segunda
+            // notificacion con la misma ruta el LaunchedEffect no se vuelve a lanzar
             LaunchedEffect(toScreen) {
-                if (cuenta != null) toScreen?.let { pantallaActual = it }
+                if (cuenta != null) toScreen?.let {
+                    pantallaActual = it
+                    onPantallaAbierta()
+                }
             }
 
             // El perfil cuelga de la cuenta (ya no se usa PerfilStorage)
@@ -66,7 +79,8 @@ fun App(toScreen: String? = null) {
             //a restaurante y al reves
             var personaElegida by remember { mutableStateOf<Perfil?>(null) }
             var restauranteElegido by remember { mutableStateOf<Restaurante?>(null) }
-            var citas by remember { mutableStateOf(listOf<Cita>()) }
+            // El plan que el usuario acaba de confirmar y al que le falta dia y hora
+            var planPendiente by remember { mutableStateOf<Pair<Perfil, Restaurante>?>(null) }
 
             when (pantallaActual) {
                 "login" -> LoginScreen(
@@ -111,7 +125,36 @@ fun App(toScreen: String? = null) {
 
                 "calendario" -> CalendarioScreenRoot(
                     viewModel = calendarioViewModel,
-                    onVolverClick = { pantallaActual = "principal" }
+                    onVolverClick = {
+                        planPendiente = null
+                        pantallaActual = "principal"
+                    },
+                    textoPlanPendiente = planPendiente?.let { (p, r) ->
+                        "Tu plan con ${p.nombre} en ${r.nom}"
+                    },
+                    onGuardarPlan = { dia, horaElegida ->
+                        val plan = planPendiente
+                        if (plan != null) {
+                            calendarioViewModel.guardarPlan(
+                                personaNombre = plan.first.nombre,
+                                restauranteNombre = plan.second.nom,
+                                ubicacion = plan.second.ubicacion,
+                                dia = dia,
+                                hora = horaElegida
+                            )
+                            // El recordatorio solo si esta activado en ajustes
+                            if (ajustesState.ajustes.avisosCitas) {
+                                onProgramarRecordatorio(
+                                    "Tienes plan",
+                                    "Has quedado con ${plan.first.nombre} en ${plan.second.nom} " +
+                                        "el día $dia a las $horaElegida"
+                                )
+                            }
+                            planPendiente = null
+                            personaElegida = null
+                            restauranteElegido = null
+                        }
+                    }
                 )
 
                 "mapa" -> MapaScreenRoot(
@@ -127,7 +170,16 @@ fun App(toScreen: String? = null) {
                 "perfil" -> PerfilScreen(
                     perfil = perfil,
                     onGuardar = { perfil = it; auth.actualizarPerfil(it) },
-                    onVolverClick = { pantallaActual = "principal" }
+                    onVolverClick = { pantallaActual = "principal" },
+                    onCerrarSesion = {
+                        auth.cerrarSesion()
+                        cuenta = null
+                        perfil = Perfil()
+                        personaElegida = null
+                        restauranteElegido = null
+                        planPendiente = null
+                        pantallaActual = "login"
+                    }
                 )
 
                 "restaurante" -> RestauranteScreen(
@@ -173,11 +225,12 @@ fun App(toScreen: String? = null) {
                         val p = personaElegida
                         val r = restauranteElegido
                         if (p != null && r != null) {
-                            citas = citas + Cita(p, r)
+                            // Falta el dia: lo elige el usuario en el calendario
+                            planPendiente = p to r
+                            pantallaActual = "calendario"
+                        } else {
+                            pantallaActual = "principal"
                         }
-                        personaElegida = null
-                        restauranteElegido = null
-                        pantallaActual = "principal"
                     }
                 )
             }

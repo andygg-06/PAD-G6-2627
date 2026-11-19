@@ -10,7 +10,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,13 +32,22 @@ import com.pad.dishmatch.features.calendario.domain.Cita
 @Composable
 fun CalendarioScreenRoot(
     viewModel: CalendarioViewModel,
-    onVolverClick: () -> Unit
+    onVolverClick: () -> Unit,
+    // Si venimos de confirmar un plan, aqui llega el texto que se muestra arriba
+    textoPlanPendiente: String? = null,
+    onGuardarPlan: (dia: Int, hora: String) -> Unit = { _, _ -> }
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    // Al abrir la pantalla releemos: puede haber planes guardados despues
+    LaunchedEffect(Unit) { viewModel.refrescar() }
+
     CalendarioScreen(
         state = state,
         onAction = viewModel::onAction,
-        onVolverClick = onVolverClick
+        onVolverClick = onVolverClick,
+        textoPlanPendiente = textoPlanPendiente,
+        onGuardarPlan = onGuardarPlan
     )
 }
 
@@ -45,8 +58,12 @@ fun CalendarioScreenRoot(
 fun CalendarioScreen(
     state: CalendarioState,
     onAction: (CalendarioAction) -> Unit,
-    onVolverClick: () -> Unit
+    onVolverClick: () -> Unit,
+    textoPlanPendiente: String? = null,
+    onGuardarPlan: (dia: Int, hora: String) -> Unit = { _, _ -> }
 ) {
+    var hora by remember { mutableStateOf("21:00") }
+
     Scaffold(
         topBar = {
             // El boton arriba y el titulo debajo: asi el titulo nunca
@@ -75,6 +92,59 @@ fun CalendarioScreen(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // Banda de "elige el dia", solo cuando llegamos de confirmar un plan
+            if (textoPlanPendiente != null) {
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            Text(
+                                text = "ELIGE EL DÍA",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                            Text(
+                                text = textoPlanPendiente,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                            Text(
+                                text = "Toca un día en el calendario y elige la hora.",
+                                fontSize = 13.sp,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                FilterChip(
+                                    selected = hora == "14:00",
+                                    onClick = { hora = "14:00" },
+                                    label = { Text("Comida · 14:00") }
+                                )
+                                FilterChip(
+                                    selected = hora == "21:00",
+                                    onClick = { hora = "21:00" },
+                                    label = { Text("Cena · 21:00") }
+                                )
+                            }
+                            Button(
+                                onClick = { onGuardarPlan(state.diaSeleccionado, hora) },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text("Guardar el día ${state.diaSeleccionado} a las $hora")
+                            }
+                        }
+                    }
+                }
+            }
+
             // Mes y cabecera del calendario
             item {
                 Card(
