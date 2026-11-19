@@ -60,6 +60,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
             implementation("com.russhwolf:multiplatform-settings-no-arg:1.3.0")
+            implementation("org.kotlincrypto.hash:sha2:0.8.0")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
