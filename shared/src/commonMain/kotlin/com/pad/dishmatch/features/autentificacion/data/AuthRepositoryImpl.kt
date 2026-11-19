@@ -1,4 +1,3 @@
-// features/auth/data/AuthRepositoryImpl.kt
 package com.pad.dishmatch.features.autentificacion.data
 
 import com.pad.dishmatch.features.autentificacion.domain.AuthRepository

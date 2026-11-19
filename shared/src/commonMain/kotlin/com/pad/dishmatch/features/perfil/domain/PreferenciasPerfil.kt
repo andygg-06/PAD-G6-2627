@@ -56,7 +56,7 @@ enum class TipoCocinas(val cocina: String) {
 enum class Presupuesto(val symbol: String) {
     ECONOMICO("$"),
     MEDIO("$$"),
-    PREMIUM("$$"),
+    PREMIUM("$$$"),
 }
 
 enum class TipoLocal(val adj: String) {
