@@ -29,7 +29,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import com.pad.dishmatch.model.AdjRestaurante
 import com.pad.dishmatch.model.Restaurante
-
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 val candidatos = listOf(
     Perfil(
         id = "c1", nombre = "Laura M.", edad = 21,
@@ -54,6 +55,7 @@ val candidatos = listOf(
     )
 )
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ConocerScreen(
     miPerfil: Perfil,
@@ -65,21 +67,23 @@ fun ConocerScreen(
     var indice by remember { mutableStateOf(0) }
     var filtro by remember { mutableStateOf<AdjPlato?>(null) }
     var mensaje by remember { mutableStateOf<String?>(null) }
+     var filtroPers by remember { mutableStateOf<AdjPersonas?>(null) }
     //nuevo, para elegir el filtro
     var usarPerfil by remember { mutableStateOf(false) }
-    val lista = if (usarPerfil) {
-        candidatos.filter { c ->
-            val encajaPersonalidad =
-                miPerfil.busco.isEmpty() || c.personalidad.intersect(miPerfil.busco).isNotEmpty()
-            val encajaDieta =
-                miPerfil.dieta.isEmpty() || c.dieta.intersect(miPerfil.dieta).isNotEmpty()
-            encajaPersonalidad && encajaDieta
-        }
-    } else if (filtro == null) {
-        candidatos
-    } else {
-        candidatos.filter { filtro in it.dieta }
-    }
+     val lista = if (usarPerfil) {
+         candidatos.filter { c ->
+             val encajaPersonalidad =
+                 miPerfil.busco.isEmpty() || c.personalidad.intersect(miPerfil.busco).isNotEmpty()
+             val encajaDieta =
+                 miPerfil.dieta.isEmpty() || c.dieta.intersect(miPerfil.dieta).isNotEmpty()
+             encajaPersonalidad && encajaDieta
+         }
+     } else {
+         candidatos.filter { c ->
+             (filtro == null || filtro in c.dieta) &&
+                     (filtroPers == null || filtroPers in c.personalidad)
+         }
+     }
      val listaFinal = if (restaurante == null) lista else lista.filter { c ->
          c.estilosRestaurante.any { it in restaurante.estilosRestaurante }
      }
@@ -109,6 +113,19 @@ fun ConocerScreen(
                         selected = filtro == d,
                         onClick = { filtro = if (filtro == d) null else d; indice = 0 },
                         label = { Text(d.adj) }
+                    )
+                }
+            }
+            Text("Filtrar por personalidad:")
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                for (p in AdjPersonas.entries) {
+                    FilterChip(
+                        selected = filtroPers == p,
+                        onClick = { filtroPers = if (filtroPers == p) null else p; indice = 0 },
+                        label = { Text(p.adj) }
                     )
                 }
             }
