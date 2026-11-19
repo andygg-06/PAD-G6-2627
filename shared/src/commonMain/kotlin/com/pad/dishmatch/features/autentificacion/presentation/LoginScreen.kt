@@ -1,15 +1,20 @@
 package com.pad.dishmatch.features.autentificacion.presentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dishmatch.shared.generated.resources.Res
+import dishmatch.shared.generated.resources.logo
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun LoginScreen(
@@ -22,8 +27,14 @@ fun LoginScreen(
 
     Column(
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp, androidx.compose.ui.Alignment.CenterVertically)
+        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Image(
+            painter = painterResource(Res.drawable.logo),
+            contentDescription = "DishMatch",
+            modifier = Modifier.height(110.dp)
+        )
         Text("DishMatch", fontSize = 32.sp, fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary)
         Text("Inicia sesión", fontSize = 20.sp)

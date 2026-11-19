@@ -191,10 +191,12 @@ fun MapaScreen(
                                 else -> 0.5f
                             }
 
+                            // Colores del tema, no fijos: asi el mapa
+                            // combina con el resto de la aplicacion
                             val pinColor = if (punto.tipo == TipoPunto.RESTAURANTE) {
-                                Color(0xFFE65100) // Naranja restaurante
+                                MaterialTheme.colorScheme.primary
                             } else {
-                                Color(0xFF1E88E5) // Azul cita
+                                MaterialTheme.colorScheme.secondary
                             }
 
                             Box(
@@ -212,11 +214,11 @@ fun MapaScreen(
                                     // Burbuja del pin
                                     Box(
                                         modifier = Modifier
-                                            .size(if (esSeleccionado) 40.dp else 32.dp)
+                                            .size(if (esSeleccionado) 40.dp else 30.dp)
                                             .clip(CircleShape)
-                                            .background(if (esSeleccionado) Color.Black else pinColor)
+                                            .background(pinColor)
                                             .border(
-                                                width = 2.dp,
+                                                width = if (esSeleccionado) 3.dp else 2.dp,
                                                 color = Color.White,
                                                 shape = CircleShape
                                             ),
@@ -224,22 +226,26 @@ fun MapaScreen(
                                     ) {
                                         Text(
                                             text = if (punto.tipo == TipoPunto.RESTAURANTE) "🍴" else "👥",
-                                            fontSize = if (esSeleccionado) 18.sp else 14.sp
+                                            fontSize = if (esSeleccionado) 18.sp else 13.sp
                                         )
                                     }
-                                    // Nombre flotante
-                                    Surface(
-                                        shape = RoundedCornerShape(4.dp),
-                                        color = if (esSeleccionado) Color.Black else Color.White.copy(alpha = 0.9f),
-                                        shadowElevation = 2.dp
-                                    ) {
-                                        Text(
-                                            text = punto.nombre,
-                                            fontSize = 10.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = if (esSeleccionado) Color.White else Color.Black,
-                                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
-                                        )
+                                    // El nombre solo en el punto elegido: con todos
+                                    // a la vez las etiquetas se tapaban unas a otras
+                                    if (esSeleccionado) {
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Surface(
+                                            shape = RoundedCornerShape(6.dp),
+                                            color = MaterialTheme.colorScheme.inverseSurface,
+                                            shadowElevation = 2.dp
+                                        ) {
+                                            Text(
+                                                text = punto.nombre,
+                                                fontSize = 11.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = MaterialTheme.colorScheme.inverseOnSurface,
+                                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp)
+                                            )
+                                        }
                                     }
                                 }
                             }

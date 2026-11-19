@@ -91,7 +91,7 @@ fun ConocerScreen(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        OutlinedButton(onClick = onVolverClick) { Text("<- Volver") }
+        OutlinedButton(onClick = onVolverClick) { Text("← Volver") }
         if (restaurante != null) Text("Cita en ${restaurante.nom}: personas que encajan")
 
         Row(verticalAlignment = Alignment.CenterVertically) {
