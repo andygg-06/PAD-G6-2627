@@ -42,7 +42,7 @@ private val restaurantes = listOf(
         precioMin = 8,
         precioMax = 14,
         estilosRestaurante = arrayOf(AdjRestaurante.URBANO, AdjRestaurante.TRADICIONAL),
-        Carta = arrayOf(
+        carta = arrayOf(
             Plato("Ensalada Completa de Quinoa", 8, arrayOf(AdjPlato.VEGANO, AdjPlato.SALUDABLE)),
             Plato("Pechuga Asada con Arroz Integral", 10, arrayOf(AdjPlato.PROTEINA, AdjPlato.SALUDABLE)),
             Plato("Tortilla Española Casera", 7, arrayOf(AdjPlato.VEGETARIANO))
@@ -54,7 +54,7 @@ private val restaurantes = listOf(
         precioMin = 10,
         precioMax = 18,
         estilosRestaurante = arrayOf(AdjRestaurante.URBANO),
-        Carta = arrayOf(
+        carta = arrayOf(
             Plato("Poke Bowl Salmón Fresco", 13, arrayOf(AdjPlato.PROTEINA, AdjPlato.ALERGIA_PESCADO)),
             Plato("Bowl Tofu y Aguacate", 11, arrayOf(AdjPlato.VEGANO, AdjPlato.SALUDABLE)),
             Plato("Smoothie Bowl Proteico", 7, arrayOf(AdjPlato.PROTEINA, AdjPlato.INTOLERANTE_LACTOSA))
@@ -66,7 +66,7 @@ private val restaurantes = listOf(
         precioMin = 15,
         precioMax = 25,
         estilosRestaurante = arrayOf(AdjRestaurante.ELEGANTE, AdjRestaurante.TRADICIONAL),
-        Carta = arrayOf(
+        carta = arrayOf(
             Plato("Pizza Margherita al Horno", 12, arrayOf(AdjPlato.VEGETARIANO, AdjPlato.INTOLERANTE_LACTOSA)),
             Plato("Pasta Carbonara Tradicional", 14, arrayOf(AdjPlato.INTOLERANTE_LACTOSA)),
             Plato("Tiramisú Casero", 6, arrayOf(AdjPlato.INTOLERANTE_LACTOSA))
@@ -94,12 +94,12 @@ fun RestauranteScreen(
         .filter { r ->
             !soloAptos || (
                     (estilos.isEmpty() || r.estilosRestaurante.any { it in estilos }) &&
-                            (dietas.isEmpty() || r.Carta.any { p -> p.tipo.any { it in dietas } })
+                            (dietas.isEmpty() || r.carta.any { p -> p.tipo.any { it in dietas } })
                     )
         }
         .sortedByDescending { r ->
             r.estilosRestaurante.count { it in estilos } +
-                    r.Carta.count { p -> p.tipo.any { it in dietas } }
+                    r.carta.count { p -> p.tipo.any { it in dietas } }
         }
 
     Column(
@@ -159,7 +159,7 @@ fun RestauranteScreen(
             }
         } else {
             Text(r.nom, style = MaterialTheme.typography.headlineSmall)
-            for (p in r.Carta) {
+            for (p in r.carta) {
                 Text("${p.nom} - ${p.precio}€ (${p.tipo.joinToString { it.adj }})")
             }
             Button(onClick = { onElegir(r, luegoPersona) }) { Text("Elegir este local") }

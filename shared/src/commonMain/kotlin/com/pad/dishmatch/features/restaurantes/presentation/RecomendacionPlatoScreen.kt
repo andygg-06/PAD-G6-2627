@@ -24,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.pad.dishmatch.model.Perfil
-import com.pad.dishmatch.model.Plato
 import com.pad.dishmatch.model.Restaurante
 
 @Composable
@@ -37,7 +36,7 @@ fun RecomendacionPlatoScreen(
 ) {
     // Selección del plato con mayor afinidad a la dieta guardada en el perfil
     val platoRecomendado = remember(restaurante, miPerfil) {
-        val carta = restaurante?.Carta ?: emptyArray()
+        val carta = restaurante?.carta ?: emptyArray()
         if (carta.isEmpty()) return@remember null
 
         if (miPerfil.dieta.isEmpty()) {
@@ -139,14 +138,14 @@ fun RecomendacionPlatoScreen(
         }
 
         // Otras opciones disponibles en la carta
-        if (restaurante != null && restaurante.Carta.isNotEmpty()) {
+        if (restaurante != null && restaurante.carta.isNotEmpty()) {
             Text(
                 text = "Otros platos disponibles en la carta:",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
 
-            for (plato in restaurante.Carta) {
+            for (plato in restaurante.carta) {
                 if (plato != platoRecomendado) {
                     Card(modifier = Modifier.fillMaxWidth()) {
                         Row(

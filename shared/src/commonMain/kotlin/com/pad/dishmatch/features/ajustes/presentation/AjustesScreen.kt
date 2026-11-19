@@ -1,10 +1,24 @@
 package com.pad.dishmatch.features.ajustes.presentation
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -168,68 +182,6 @@ fun AjustesScreen(
                                 onCheckedChange = { onAction(AjustesAction.CambiarAvisosCitas(it)) }
                             )
                         }
-                    }
-                }
-            }
-
-            // SECCIÓN: BÚSQUEDA Y RADAR
-            item {
-                Text(
-                    text = "PREFERENCIAS DE BÚSQUEDA",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-
-            item {
-                Card(modifier = Modifier.fillMaxWidth()) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Radio máximo de búsqueda", fontWeight = FontWeight.SemiBold)
-                            Text(
-                                text = "${state.ajustes.radioBusquedaKm.toInt()} km",
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Slider(
-                            value = state.ajustes.radioBusquedaKm,
-                            onValueChange = { onAction(AjustesAction.CambiarRadioBusqueda(it)) },
-                            valueRange = 1f..20f,
-                            steps = 18
-                        )
-                        Text(
-                            text = "Filtra restaurantes y personas afines dentro de este rango",
-                            fontSize = 12.sp,
-                            color = Color.Gray
-                        )
-                    }
-                }
-            }
-
-            // SECCIÓN: ACERCA DE
-            item {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = "DishMatch v1.0 • Hito 2",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Programación de Aplicaciones para Dispositivos Móviles\nUniversidad Complutense de Madrid • Grupo 06",
-                            fontSize = 12.sp,
-                            color = Color.Gray
-                        )
                     }
                 }
             }

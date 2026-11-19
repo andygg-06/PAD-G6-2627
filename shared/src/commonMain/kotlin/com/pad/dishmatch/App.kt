@@ -54,7 +54,7 @@ fun App(
             val auth = remember { AuthRepositoryImpl() }
             var cuenta by remember { mutableStateOf(auth.cuentaActual()) }
 
-            // Sin sesión empezamos en login; con sesion, en la pantalla de la notificacion o en principal
+            // Sin sesion empezamos en login; con sesion, en la pantalla de la notificacion o en principal
             var pantallaActual by remember {
                 mutableStateOf(if (cuenta == null) "login" else (toScreen ?: "principal"))
             }
@@ -69,7 +69,7 @@ fun App(
                 }
             }
 
-            // El perfil cuelga de la cuenta (ya no se usa PerfilStorage)
+            // El perfil cuelga de la cuenta
             var perfil by remember { mutableStateOf(cuenta?.perfil ?: Perfil()) }
 
             val calendarioViewModel = remember { CalendarioViewModel() }
