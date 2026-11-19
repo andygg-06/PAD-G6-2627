@@ -194,7 +194,7 @@ fun App(
                         } else if (luegoPersona) {
                             pantallaActual = "conocer"
                         } else {
-                            pantallaActual = "principal"
+                            pantallaActual = "recomendacion"
                         }
                     }
                 )
