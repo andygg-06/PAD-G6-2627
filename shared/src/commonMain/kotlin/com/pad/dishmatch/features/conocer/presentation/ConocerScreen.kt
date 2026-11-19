@@ -27,30 +27,41 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import com.pad.dishmatch.model.AdjRestaurante
+import com.pad.dishmatch.model.Restaurante
 
 val candidatos = listOf(
     Perfil(
         id = "c1", nombre = "Laura M.", edad = 21,
         biografia = "Fanática del ramen y la comida asiática.",
         personalidad = setOf(AdjPersonas.FIESTERO, AdjPersonas.ROMANTICO),
-        dieta = setOf(AdjPlato.VEGETARIANO, AdjPlato.SALUDABLE)
+        dieta = setOf(AdjPlato.VEGETARIANO, AdjPlato.SALUDABLE),
+        estilosRestaurante = setOf(AdjRestaurante.URBANO, AdjRestaurante.ELEGANTE)
     ),
-    Perfil(id = "c2", nombre = "Carlos G.", edad = 23,
+    Perfil(
+        id = "c2", nombre = "Carlos G.", edad = 23,
         biografia = "Busco sitios con platos altos en proteína.",
         personalidad = setOf(AdjPersonas.ALTO),
-        dieta = setOf(AdjPlato.PROTEINA, AdjPlato.INTOLERANTE_LACTOSA)),
-    Perfil(id = "c3", nombre = "Elena R.", edad = 20,
+        dieta = setOf(AdjPlato.PROTEINA, AdjPlato.INTOLERANTE_LACTOSA),
+        estilosRestaurante = setOf(AdjRestaurante.URBANO, AdjRestaurante.TRADICIONAL)
+    ),
+    Perfil(
+        id = "c3", nombre = "Elena R.", edad = 20,
         biografia = "Vegana estricta, busco cafeterías chulas.",
         personalidad = setOf(AdjPersonas.ROMANTICO),
-        dieta = setOf(AdjPlato.VEGANO, AdjPlato.SALUDABLE))
+        dieta = setOf(AdjPlato.VEGANO, AdjPlato.SALUDABLE),
+        estilosRestaurante = setOf(AdjRestaurante.ELEGANTE)
+    )
 )
 
 @Composable
 fun ConocerScreen(
     miPerfil: Perfil,
+    restaurante: Restaurante?,
     onVolverClick: () -> Unit,
     onQuedar: (Perfil) -> Unit
-) {
+)
+ {
     var indice by remember { mutableStateOf(0) }
     var filtro by remember { mutableStateOf<AdjPlato?>(null) }
     var mensaje by remember { mutableStateOf<String?>(null) }
@@ -69,7 +80,10 @@ fun ConocerScreen(
     } else {
         candidatos.filter { filtro in it.dieta }
     }
-    val actual = lista.getOrNull(indice)
+     val listaFinal = if (restaurante == null) lista else lista.filter { c ->
+         c.estilosRestaurante.any { it in restaurante.estilosRestaurante }
+     }
+     val actual = listaFinal.getOrNull(indice)
 
 
 
@@ -78,6 +92,7 @@ fun ConocerScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         OutlinedButton(onClick = onVolverClick) { Text("<- Volver") }
+        if (restaurante != null) Text("Cita en ${restaurante.nom}: personas que encajan")
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Switch(
@@ -121,7 +136,9 @@ fun ConocerScreen(
 
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         OutlinedButton(onClick = { indice++; mensaje = null }) { Text("Pasar") }
-                        Button(onClick = { onQuedar(actual) }) { Text("🍽️¡Quedar!") }
+                        Button(onClick = { onQuedar(actual) }) { //depende de si tenias cita hecha
+                            Text(if (restaurante != null) "¿Aceptar cita en ${restaurante.nom}?" else "🍽️¡Quedar!")
+                        }
                     }
                 }
             }

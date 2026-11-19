@@ -3,14 +3,22 @@ enum class AdjPersonas(val adj: String) {
     FIESTERO("le gusta fiesta"),
     ALTO("alto"),
     BAJO("bajo"),
-    ROMANTICO("romantico")
+    ROMANTICO("romantico"),
+    DEPORTISTA("Deportista")
 
 }
 
 enum class AdjRestaurante(val adj: String){
     ELEGANTE("elegante"),
     URBANO("urbano"),
-    TRADICIONAL("tradicional")
+    TRADICIONAL("tradicional"),
+    RESTAURANTE("Restaurante"),
+    BAR("Bar"),
+    CAFE("Cafe"),
+    THEME_PARK("Parque de atracciones"),
+    ITALIANO("Italiano"),
+    INDIO("Indio"),
+    ASIATICO("Asiático")
 
 
 }
@@ -22,5 +30,7 @@ enum class AdjPlato(val adj: String) {
     PROTEINA("Alta en proteina"),
     VEGANO("Vegano"),
     VEGETARIANO("Vegetariano"),
-    SALUDABLE("saludable")
+    SALUDABLE("saludable"),
+    CELIACO("Celiaco")
+
 }
