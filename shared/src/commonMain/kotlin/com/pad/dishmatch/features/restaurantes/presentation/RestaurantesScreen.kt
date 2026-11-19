@@ -3,6 +3,8 @@ package com.pad.dishmatch.features.restaurantes.presentation
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -71,19 +73,20 @@ private val restaurantes = listOf(
         )
     )
 )
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RestauranteScreen(
     miPerfil: Perfil,
     persona: Perfil?,
     onVolverClick: () -> Unit,
-    onElegir: (Restaurante) -> Unit
-) {
+    onElegir: (Restaurante, Boolean) -> Unit) {
     var texto by remember { mutableStateOf("") }
     var estilo by remember { mutableStateOf<AdjRestaurante?>(null) }
     var abierto by remember { mutableStateOf<Restaurante?>(null) }
     var soloAptos by remember { mutableStateOf(false) }
     val dietas = if (persona != null) miPerfil.dieta + persona.dieta else miPerfil.dieta
     val estilos = miPerfil.estilosRestaurante
+    var luegoPersona by remember { mutableStateOf(false) }
 
     val lista = restaurantes
         .filter { soloAptos || texto.isBlank() || it.nom.contains(texto, ignoreCase = true) }
@@ -109,28 +112,43 @@ fun RestauranteScreen(
 
         if (persona != null) Text("Quedada con ${persona.nombre}: restaurantes recomendados")
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Switch(
-                checked = soloAptos,
-                onCheckedChange = { soloAptos = it; texto = ""; estilo = null }
-            )
-            Spacer(Modifier.width(8.dp))
-            Text("Solo los que encajan con mi perfil")
-        }
+
 
         val r = abierto
         if (r == null) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Switch(
+                    checked = soloAptos,
+                    onCheckedChange = { soloAptos = it; texto = ""; estilo = null }
+                )
+                Spacer(Modifier.width(8.dp))
+                Text("Solo los que encajan con mi perfil")
+            }
+
             if (!soloAptos) {
                 OutlinedTextField(texto, { texto = it }, label = { Text("Buscar") },
                     singleLine = true, modifier = Modifier.fillMaxWidth())
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                //flow para que si hay muchos filtros no se bugueen
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     for (e in AdjRestaurante.entries) {
-                        FilterChip(selected = estilo == e,
+                        FilterChip(
+                            selected = estilo == e,
                             onClick = { estilo = if (estilo == e) null else e },
-                            label = { Text(e.adj) })
+                            label = { Text(e.adj) }
+                        )
                     }
                 }
             }
+            if (persona == null) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Switch(checked = luegoPersona, onCheckedChange = { luegoPersona = it })
+                    Spacer(Modifier.width(8.dp))
+                    Text("Después, elegir con quién quedar")
+                }
+            } //solo si no has elegido persona
             for (rest in lista) {
                 Card(Modifier.fillMaxWidth().clickable { abierto = rest }) {
                     Column(Modifier.padding(16.dp)) {
@@ -144,7 +162,7 @@ fun RestauranteScreen(
             for (p in r.Carta) {
                 Text("${p.nom} - ${p.precio}€ (${p.tipo.joinToString { it.adj }})")
             }
-            Button(onClick = { onElegir(r) }) { Text("Elegir este local") }
+            Button(onClick = { onElegir(r, luegoPersona) }) { Text("Elegir este local") }
         }
     }
 }

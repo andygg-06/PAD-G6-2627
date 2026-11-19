@@ -20,8 +20,11 @@ import com.pad.dishmatch.features.calendario.presentation.CalendarioViewModel
 import com.pad.dishmatch.features.mapa.presentation.MapaScreenRoot
 import com.pad.dishmatch.features.mapa.presentation.MapaViewModel
 import com.pad.dishmatch.features.restaurantes.presentation.RestauranteScreen
+import com.pad.dishmatch.features.restaurantes.presentation.RecomendacionPlatoScreen
 import com.pad.dishmatch.model.Perfil
 import com.pad.dishmatch.model.Restaurante
+import com.pad.dishmatch.model.Cita
+
 import com.pad.dishmatch.ui.home.PaginaPrincipal
 import com.pad.dishmatch.ui.theme.TemaDishMatch
 
@@ -46,18 +49,20 @@ fun App(toScreen: String? = null) {
             val calendarioViewModel = remember { CalendarioViewModel() }
             val mapaViewModel = remember { MapaViewModel() }
 
-            // Variables para pasar datos entre pantallas
+            //variables para pasar datos entre pantallas a la hora de pasar de conocer
+            //a restaurante y al reves
             var personaElegida by remember { mutableStateOf<Perfil?>(null) }
             var restauranteElegido by remember { mutableStateOf<Restaurante?>(null) }
-
+            var citas by remember { mutableStateOf(listOf<Cita>()) }
             when (pantallaActual) {
                 "principal" -> PaginaPrincipal(
                     onIrCalendario = { pantallaActual = "calendario" },
                     onIrMapa = { pantallaActual = "mapa" },
                     onIrAjustes = { pantallaActual = "ajustes" },
-                    onIrConocer = { pantallaActual = "conocer" },
-                    onIrRestaurante = { pantallaActual = "restaurante" },
-                    onIrPerfil = { pantallaActual = "perfil" }
+                    onIrPerfil = { pantallaActual = "perfil" },
+                    //se pone a null para no arrastrar la cita anterior
+                    onIrConocer = { personaElegida = null; restauranteElegido = null; pantallaActual = "conocer" },
+                    onIrRestaurante = { personaElegida = null; restauranteElegido = null; pantallaActual = "restaurante" }
                 )
 
                 "calendario" -> CalendarioScreenRoot(
@@ -75,23 +80,61 @@ fun App(toScreen: String? = null) {
                     onVolverClick = { pantallaActual = "principal" }
                 )
 
-                "restaurante" -> RestauranteScreen(
-                    miPerfil = perfil,
-                    persona = personaElegida,
-                    onVolverClick = { personaElegida = null; pantallaActual = "principal" },
-                    onElegir = { restauranteElegido = it; pantallaActual = "principal" }
-                )
-
                 "perfil" -> PerfilScreen(
                     perfil = perfil,
                     onGuardar = { perfil = it; PerfilStorage.guardar(it) },
                     onVolverClick = { pantallaActual = "principal" }
                 )
 
+                "restaurante" -> RestauranteScreen(
+                    miPerfil = perfil,
+                    persona = personaElegida,
+                    onVolverClick = { personaElegida = null; pantallaActual = "principal" },
+                    onElegir = { r, luegoPersona ->
+                        restauranteElegido = r
+                        val p = personaElegida
+                        if (p != null) {
+                            pantallaActual = "recomendacion"
+                        } else if (luegoPersona) {
+                            pantallaActual = "conocer"
+                        } else {
+                            pantallaActual = "principal"
+                        }
+                    }
+                )
+
                 "conocer" -> ConocerScreen(
                     miPerfil = perfil,
-                    onVolverClick = { pantallaActual = "principal" },
-                    onQuedar = { personaElegida = it; pantallaActual = "restaurante" }
+                    restaurante = restauranteElegido,
+                    onVolverClick = { restauranteElegido = null; pantallaActual = "principal" },
+                    onQuedar = { p ->
+                        personaElegida = p
+                        val r = restauranteElegido
+                        if (r != null) {
+                            pantallaActual = "recomendacion"
+                        } else {
+                            pantallaActual = "restaurante"
+                        }
+                    }
+                )
+
+                "recomendacion" -> RecomendacionPlatoScreen(
+                    miPerfil = perfil,
+                    persona = personaElegida,
+                    restaurante = restauranteElegido,
+                    onVolverClick = {
+                        pantallaActual = "principal"
+                    },
+                    onConfirmarPlan = {
+                        val p = personaElegida
+                        val r = restauranteElegido
+                        if (p != null && r != null) {
+                            citas = citas + Cita(p, r)
+                        }
+                        personaElegida = null
+                        restauranteElegido = null
+                        pantallaActual = "principal"
+                    }
                 )
             }
         }
