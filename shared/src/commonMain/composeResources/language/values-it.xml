@@ -1,0 +1,175 @@
+
+<!-- ITALIANO -->
+<resources>
+
+    <!-- ===================== COMMON ===================== -->
+    <string name="app_name">DishMatch</string>
+    <string name="common_volver">← Back</string>
+    <string name="common_guardar">Save</string>
+    <string name="common_cancelar">Cancel</string>
+
+    <!-- ===================== App.kt ===================== -->
+    <string name="notif_plan_titulo">You have plans</string>
+    <string name="notif_plan_mensaje">You are meeting %1$s at %2$s on day %3$s at %4$s</string>
+    <string name="app_plan_pendiente">Your plan with %1$s at %2$s</string>
+
+    <!-- ===================== LoginScreen.kt ===================== -->
+    <string name="auth_correo">Email</string>
+    <string name="auth_password">Password</string>
+    <string name="login_titulo">Log in</string>
+    <string name="login_entrar">Sign in</string>
+    <string name="login_ir_registro">Do not have an account? Sign up</string>
+
+    <!-- ===================== RegistroScreen.kt ===================== -->
+    <string name="registro_titulo">Create account</string>
+    <string name="registro_nombre">Name</string>
+    <string name="registro_password">Password (min. 8)</string>
+    <string name="registro_repetir">Repeat password</string>
+    <string name="registro_consentimiento">I expressly agree that DishMatch stores my diet and allergy data to recommend compatible restaurants and people. This is optional and I can withdraw it at any time.</string>
+    <string name="registro_boton">Create account</string>
+
+    <!-- ===================== Auth errors ===================== -->
+    <string name="auth_error_correo_invalido">Invalid email</string>
+    <string name="auth_error_password_corta">The password must be at least 8 characters long</string>
+    <string name="auth_error_cuenta_existente">An account with that email already exists</string>
+    <string name="auth_error_credenciales">Incorrect email or password</string>
+    <string name="auth_error_nombre_vacio">Enter your name</string>
+    <string name="auth_error_passwords_distintas">Passwords do not match</string>
+
+    <!-- ===================== PaginaPrincipal.kt ===================== -->
+    <string name="home_mi_perfil">My profile</string>
+    <string name="home_titulo">Who are you eating with today?</string>
+    <string name="home_conocer_titulo">Meet someone</string>
+    <string name="home_conocer_desc">People with your tastes, near you</string>
+    <string name="home_restaurante_titulo">Choose a restaurant</string>
+    <string name="home_restaurante_desc">Places that match your preferences</string>
+    <string name="home_accesos_rapidos">QUICK ACCESS</string>
+    <string name="home_calendario">Calendar</string>
+    <string name="home_mapa">Map</string>
+    <string name="home_ajustes">Settings</string>
+
+    <!-- ===================== AjustesScreen.kt ===================== -->
+    <string name="ajustes_titulo">Settings and configuration</string>
+    <string name="ajustes_seccion_apariencia">APPEARANCE AND PERSONALIZATION</string>
+    <string name="ajustes_modo_oscuro">Dark mode</string>
+    <string name="ajustes_modo_oscuro_desc">Customizable interface (Design charter)</string>
+    <string name="ajustes_idioma">Language (Mr. Worldwide)</string>
+    <string name="ajustes_idioma_desc">App language</string>
+    <string name="ajustes_seccion_notificaciones">NOTIFICATIONS</string>
+    <string name="ajustes_notif_matches">Match notifications</string>
+    <string name="ajustes_notif_matches_desc">Notify me when someone matches with me</string>
+    <string name="ajustes_recordatorios">Date reminders</string>
+    <string name="ajustes_recordatorios_desc">Alerts before mealtime</string>
+    <string name="ajustes_restablecer">Reset to default values</string>
+
+    <!-- ===================== MapaScreen.kt ===================== -->
+    <string name="mapa_titulo">Map of restaurants and dates</string>
+    <string name="mapa_subtitulo">Central Madrid • Radius: %1$s m</string>
+    <string name="mapa_tipo_restaurante">Restaurant</string>
+    <string name="mapa_tipo_cita">Date</string>
+    <string name="mapa_distancia">🚶 Distance: %1$s m (approx. %2$s min on foot)</string>
+    <string name="mapa_lugares">PLACES FOUND (%1$s)</string>
+
+    <!-- ===================== CalendarioScreen.kt ===================== -->
+    <string name="calendario_titulo">Your dates calendar</string>
+    <string name="calendario_elige_dia">PICK THE DAY</string>
+    <string name="calendario_elige_dia_desc">Tap a day on the calendar and choose the time.</string>
+    <string name="calendario_comida">Lunch · 14:00</string>
+    <string name="calendario_cena">Dinner · 21:00</string>
+    <string name="calendario_guardar_dia">Save day %1$s at %2$s</string>
+    <string name="calendario_mes">NOVEMBER 2026</string>
+    <string-array name="calendario_dias_semana">
+        <item>M</item>
+        <item>T</item>
+        <item>W</item>
+        <item>T</item>
+        <item>F</item>
+        <item>S</item>
+        <item>S</item>
+    </string-array>
+    <string name="calendario_destacadas">FEATURED DATES (DAY %1$s)</string>
+    <string name="calendario_sin_citas">You have no dates scheduled for day %1$s.\nSelect day 14, 21 or 28 to see your meetups!</string>
+    <string name="calendario_cita_con">DATE WITH: %1$s</string>
+    <string name="calendario_estado_confirmada">Confirmed</string>
+    <string name="calendario_donde">📍 WHERE: %1$s</string>
+    <string name="calendario_cuando">🕒 WHEN: %1$s, at %2$s</string>
+    <string name="calendario_fecha">November %1$s</string>
+    <string name="calendario_cancelar_cita">Cancel date</string>
+    <string name="calendario_todas">ALL YOUR UPCOMING DATES</string>
+    <string name="calendario_cita_con_simple">Date with %1$s</string>
+    <string name="calendario_dia_flecha">Day %1$s →</string>
+
+    <!-- ===================== ConocerScreen.kt ===================== -->
+    <string name="conocer_cita_en">Date at %1$s: people who fit</string>
+    <string name="conocer_usar_perfil">Use my profile preferences</string>
+    <string name="conocer_filtrar_dieta">Filter by diet:</string>
+    <string name="conocer_filtrar_personalidad">Filter by personality:</string>
+    <string name="conocer_todos_vistos">You have seen everyone, do not overdo the flirting</string>
+    <string name="conocer_volver_a_ver">See again</string>
+    <string name="conocer_nombre_edad">%1$s, %2$s years old</string>
+    <string name="conocer_dieta">Diet: %1$s</string>
+    <string name="conocer_personalidad">Personality: %1$s</string>
+    <string name="conocer_coincidencias">You share %1$s diet preferences</string>
+    <string name="conocer_pasar">Skip</string>
+    <string name="conocer_aceptar_cita">Accept date at %1$s?</string>
+    <string name="conocer_quedar">🍽️ Meet up!</string>
+
+    <!-- ===================== RestaurantesScreen.kt ===================== -->
+    <string name="restaurante_quedada_con">Meetup with %1$s: recommended restaurants</string>
+    <string name="restaurante_solo_aptos">Only those that match my profile</string>
+    <string name="restaurante_buscar">Search</string>
+    <string name="restaurante_luego_persona">Then, choose who to meet</string>
+    <string name="restaurante_elegir_local">Choose this place</string>
+
+    <!-- ===================== RecomendacionPlatoScreen.kt ===================== -->
+    <string name="reco_titulo">Your recommended dish</string>
+    <string name="reco_restaurante">📍 Restaurant: %1$s (%2$s)</string>
+    <string name="reco_acompanante">👤 Companion: %1$s</string>
+    <string name="reco_plato_sugerido">⭐ Dish suggested for you:</string>
+    <string name="reco_apto">Suitable for your preferences: %1$s</string>
+    <string name="reco_destacado">Featured dish from the restaurant menu.</string>
+    <string name="reco_otros">Other dishes on the menu:</string>
+    <string name="reco_confirmar">Confirm plan</string>
+
+    <!-- ===================== PerfilScreen.kt ===================== -->
+    <string name="perfil_titulo">Your profile</string>
+    <string name="perfil_subtitulo">This is what we use to recommend places and people to you.</string>
+    <string name="perfil_seccion_basicos">BASIC INFO</string>
+    <string name="perfil_nombre">Name</string>
+    <string name="perfil_biografia">Bio</string>
+    <string name="perfil_biografia_hint">What do you like to eat? What are you like at the table?</string>
+    <string name="perfil_seccion_dieta">DIET AND ALLERGIES</string>
+    <string name="perfil_seccion_eres">WHAT YOU ARE LIKE</string>
+    <string name="perfil_seccion_buscas">WHO YOU ARE LOOKING FOR</string>
+    <string name="perfil_seccion_restaurantes">RESTAURANTS YOU LIKE</string>
+    <string name="perfil_cerrar_sesion">Log out</string>
+
+    <!-- ===================== model/Preferencias.kt (enums) ===================== -->
+    <!-- AdjPersonas -->
+    <string name="adj_persona_fiestero">Likes partying</string>
+    <string name="adj_persona_alto">Tall</string>
+    <string name="adj_persona_bajo">Short</string>
+    <string name="adj_persona_romantico">Romantic</string>
+    <string name="adj_persona_deportista">Sporty</string>
+    <!-- AdjRestaurante -->
+    <string name="adj_restaurante_elegante">Elegant</string>
+    <string name="adj_restaurante_urbano">Urban</string>
+    <string name="adj_restaurante_tradicional">Traditional</string>
+    <string name="adj_restaurante_restaurante">Restaurant</string>
+    <string name="adj_restaurante_bar">Bar</string>
+    <string name="adj_restaurante_cafe">Cafe</string>
+    <string name="adj_restaurante_theme_park">Theme park</string>
+    <string name="adj_restaurante_italiano">Italian</string>
+    <string name="adj_restaurante_indio">Indian</string>
+    <string name="adj_restaurante_asiatico">Asian</string>
+    <!-- AdjPlato -->
+    <string name="adj_plato_alergia_pescado">Fish allergy</string>
+    <string name="adj_plato_alergia_frutos_secos">Nut allergy</string>
+    <string name="adj_plato_intolerante_lactosa">Lactose intolerant</string>
+    <string name="adj_plato_proteina">High in protein</string>
+    <string name="adj_plato_vegano">Vegan</string>
+    <string name="adj_plato_vegetariano">Vegetarian</string>
+    <string name="adj_plato_saludable">Healthy</string>
+    <string name="adj_plato_celiaco">Celiac</string>
+
+</resources>
