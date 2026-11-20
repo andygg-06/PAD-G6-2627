@@ -102,7 +102,6 @@ fun AjustesScreen(
                         ) {
                             Column {
                                 Text("Modo oscuro", fontWeight = FontWeight.SemiBold)
-                                Text("Interfaz personalizable (Carta diseño)", fontSize = 12.sp, color = Color.Gray)
                             }
                             Switch(
                                 checked = state.ajustes.temaOscuro,
@@ -118,8 +117,7 @@ fun AjustesScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column {
-                                Text("Idioma (Mr. Worldwide)", fontWeight = FontWeight.SemiBold)
-                                Text("Idioma de la aplicación", fontSize = 12.sp, color = Color.Gray)
+                                Text("Idioma", fontWeight = FontWeight.SemiBold)
                             }
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 FilterChip(
