@@ -27,17 +27,13 @@ import com.pad.dishmatch.features.mapa.presentation.MapaViewModel
 import com.pad.dishmatch.features.restaurantes.data.RestauranteRepositoryImpl
 import com.pad.dishmatch.features.restaurantes.presentation.RestauranteScreen
 import com.pad.dishmatch.features.restaurantes.presentation.RecomendacionPlatoScreen
+import com.pad.dishmatch.features.restaurantes.presentation.CrearRestauranteScreen
 import com.pad.dishmatch.model.Perfil
 import com.pad.dishmatch.model.Restaurante
 
 import com.pad.dishmatch.ui.home.PaginaPrincipal
 import com.pad.dishmatch.ui.theme.TemaDishMatch
 
-/**
- * onProgramarRecordatorio: lo rellena cada plataforma. En Android lo pasa
- * MainActivity con WorkManager; en escritorio y web no se pasa nada y no hace nada.
- * Asi el codigo de notificaciones se queda en androidApp y commonMain no depende de el.
- */
 @Composable
 @Preview
 fun App(
@@ -45,25 +41,19 @@ fun App(
     onProgramarRecordatorio: (titulo: String, mensaje: String) -> Unit = { _, _ -> },
     onPantallaAbierta: () -> Unit = {}
 ) {
-    // El tema depende de los ajustes
     val ajustesViewModel = remember { AjustesViewModel() }
     val ajustesState by ajustesViewModel.state.collectAsStateWithLifecycle()
 
     TemaDishMatch(oscuro = ajustesState.ajustes.temaOscuro) {
         Surface(modifier = Modifier.fillMaxSize()) {
 
-            // Autentificacion del usuario
             val auth = remember { AuthRepositoryImpl() }
             var cuenta by remember { mutableStateOf(auth.cuentaActual()) }
 
-            // Sin sesion empezamos en login; con sesion, en la pantalla de la notificacion o en principal
             var pantallaActual by remember {
                 mutableStateOf(if (cuenta == null) "login" else (toScreen ?: "principal"))
             }
 
-            // Si la app ya estaba abierta, la notificacion cambia la pantalla (solo con sesión iniciada)
-            // Hay que avisar de que ya se ha usado: si no, al tocar una segunda
-            // notificacion con la misma ruta el LaunchedEffect no se vuelve a lanzar
             LaunchedEffect(toScreen) {
                 if (cuenta != null) toScreen?.let {
                     pantallaActual = it
@@ -71,18 +61,15 @@ fun App(
                 }
             }
 
-            // El perfil cuelga de la cuenta
             var perfil by remember { mutableStateOf(cuenta?.perfil ?: Perfil()) }
 
             val calendarioViewModel = remember { CalendarioViewModel() }
             val mapaViewModel = remember { MapaViewModel() }
             val conocerRepo = remember { ConocerRepositoryImpl() }
             val restauranteRepo = remember { RestauranteRepositoryImpl() }
-            //variables para pasar datos entre pantallas a la hora de pasar de conocer
-            //a restaurante y al reves
+
             var personaElegida by remember { mutableStateOf<Perfil?>(null) }
             var restauranteElegido by remember { mutableStateOf<Restaurante?>(null) }
-            // El plan que el usuario acaba de confirmar y al que le falta dia y hora
             var planPendiente by remember { mutableStateOf<Pair<Perfil, Restaurante>?>(null) }
 
             when (pantallaActual) {
@@ -107,7 +94,7 @@ fun App(
                             is ResultadoAuth.Exito -> {
                                 cuenta = r.cuenta
                                 perfil = r.cuenta.perfil
-                                pantallaActual = "perfil" // completar preferencias
+                                pantallaActual = "perfil"
                                 null
                             }
                             is ResultadoAuth.Fallo -> r.mensaje
@@ -121,7 +108,6 @@ fun App(
                     onIrMapa = { pantallaActual = "mapa" },
                     onIrAjustes = { pantallaActual = "ajustes" },
                     onIrPerfil = { pantallaActual = "perfil" },
-                    //se pone a null para no arrastrar la cita anterior
                     onIrConocer = { personaElegida = null; restauranteElegido = null; pantallaActual = "conocer" },
                     onIrRestaurante = { personaElegida = null; restauranteElegido = null; pantallaActual = "restaurante" }
                 )
@@ -145,7 +131,6 @@ fun App(
                                 dia = dia,
                                 hora = horaElegida
                             )
-                            // El recordatorio solo si esta activado en ajustes
                             if (ajustesState.ajustes.avisosCitas) {
                                 onProgramarRecordatorio(
                                     "Tienes plan",
@@ -188,8 +173,9 @@ fun App(
                 "restaurante" -> RestauranteScreen(
                     miPerfil = perfil,
                     persona = personaElegida,
-                    repository = restauranteRepo,   // <- nuevo
+                    repository = restauranteRepo,
                     onVolverClick = { personaElegida = null; pantallaActual = "principal" },
+                    onCrearRestauranteClick = { pantallaActual = "crear_restaurante" },
                     onElegir = { r, luegoPersona ->
                         restauranteElegido = r
                         val p = personaElegida
@@ -203,10 +189,18 @@ fun App(
                     }
                 )
 
+                "crear_restaurante" -> CrearRestauranteScreen(
+                    onVolverClick = { pantallaActual = "restaurante" },
+                    onGuardarRestaurante = { nuevo ->
+                        restauranteRepo.agregarRestaurante(nuevo)
+                        pantallaActual = "restaurante"
+                    }
+                )
+
                 "conocer" -> ConocerScreen(
                     miPerfil = perfil,
                     restaurante = restauranteElegido,
-                    repository = conocerRepo,       // <- nuevo
+                    repository = conocerRepo,
                     onVolverClick = { restauranteElegido = null; pantallaActual = "principal" },
                     onQuedar = { p ->
                         personaElegida = p
@@ -230,7 +224,6 @@ fun App(
                         val p = personaElegida
                         val r = restauranteElegido
                         if (p != null && r != null) {
-                            // Falta el dia: lo elige el usuario en el calendario
                             planPendiente = p to r
                             pantallaActual = "calendario"
                         } else {

@@ -8,7 +8,7 @@ import com.pad.dishmatch.model.Restaurante
 
 class RestauranteRepositoryImpl : RestauranteRepository {
 
-    private val restaurantes = listOf(
+    private val restaurantes = mutableListOf(
         Restaurante(
             nom = "La Cantina Universitaria",
             ubicacion = "Ciudad Universitaria (Moncloa)",
@@ -47,5 +47,9 @@ class RestauranteRepositoryImpl : RestauranteRepository {
         )
     )
 
-    override fun obtenerRestaurantes(): List<Restaurante> = restaurantes
+    override fun obtenerRestaurantes(): List<Restaurante> = restaurantes.toList()
+
+    override fun agregarRestaurante(restaurante: Restaurante) {
+        restaurantes.add(restaurante)
+    }
 }
