@@ -29,57 +29,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.pad.dishmatch.features.restaurantes.domain.RestauranteRepository
 import com.pad.dishmatch.model.AdjPlato
 import com.pad.dishmatch.model.AdjRestaurante
 import com.pad.dishmatch.model.Perfil
 import com.pad.dishmatch.model.Plato
 import com.pad.dishmatch.model.Restaurante
 
-private val restaurantes = listOf(
-    Restaurante(
-        nom = "La Cantina Universitaria",
-        ubicacion = "Ciudad Universitaria (Moncloa)",
-        precioMin = 8,
-        precioMax = 14,
-        estilosRestaurante = arrayOf(AdjRestaurante.URBANO, AdjRestaurante.TRADICIONAL),
-        carta = arrayOf(
-            Plato("Ensalada Completa de Quinoa", 8, arrayOf(AdjPlato.VEGANO, AdjPlato.SALUDABLE)),
-            Plato("Pechuga Asada con Arroz Integral", 10, arrayOf(AdjPlato.PROTEINA, AdjPlato.SALUDABLE)),
-            Plato("Tortilla Española Casera", 7, arrayOf(AdjPlato.VEGETARIANO))
-        )
-    ),
-    Restaurante(
-        nom = "Verde & Sano Poke Bar",
-        ubicacion = "Calle Princesa, 24",
-        precioMin = 10,
-        precioMax = 18,
-        estilosRestaurante = arrayOf(AdjRestaurante.URBANO),
-        carta = arrayOf(
-            Plato("Poke Bowl Salmón Fresco", 13, arrayOf(AdjPlato.PROTEINA, AdjPlato.ALERGIA_PESCADO)),
-            Plato("Bowl Tofu y Aguacate", 11, arrayOf(AdjPlato.VEGANO, AdjPlato.SALUDABLE)),
-            Plato("Smoothie Bowl Proteico", 7, arrayOf(AdjPlato.PROTEINA, AdjPlato.INTOLERANTE_LACTOSA))
-        )
-    ),
-    Restaurante(
-        nom = "Trattoria Bella Vista",
-        ubicacion = "Plaza de España, 5",
-        precioMin = 15,
-        precioMax = 25,
-        estilosRestaurante = arrayOf(AdjRestaurante.ELEGANTE, AdjRestaurante.TRADICIONAL),
-        carta = arrayOf(
-            Plato("Pizza Margherita al Horno", 12, arrayOf(AdjPlato.VEGETARIANO, AdjPlato.INTOLERANTE_LACTOSA)),
-            Plato("Pasta Carbonara Tradicional", 14, arrayOf(AdjPlato.INTOLERANTE_LACTOSA)),
-            Plato("Tiramisú Casero", 6, arrayOf(AdjPlato.INTOLERANTE_LACTOSA))
-        )
-    )
-)
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RestauranteScreen(
     miPerfil: Perfil,
     persona: Perfil?,
+    repository: RestauranteRepository,
     onVolverClick: () -> Unit,
-    onElegir: (Restaurante, Boolean) -> Unit) {
+    onElegir: (Restaurante, Boolean) -> Unit
+) {
+    //se piden los datos una vez, no cada vez
+    val restaurantes = remember { repository.obtenerRestaurantes() }
     var texto by remember { mutableStateOf("") }
     var estilo by remember { mutableStateOf<AdjRestaurante?>(null) }
     var abierto by remember { mutableStateOf<Restaurante?>(null) }

@@ -41,9 +41,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
-/**
- * ScreenRoot: Conecta el ViewModel con la pantalla pura
- */
+
+//Conecta la vista con la pantalla principal
 @Composable
 fun CalendarioScreenRoot(
     viewModel: CalendarioViewModel,

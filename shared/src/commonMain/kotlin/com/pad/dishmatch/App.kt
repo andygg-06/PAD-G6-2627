@@ -21,8 +21,10 @@ import com.pad.dishmatch.features.autentificacion.presentation.LoginScreen
 import com.pad.dishmatch.features.autentificacion.presentation.RegistroScreen
 import com.pad.dishmatch.features.calendario.presentation.CalendarioScreenRoot
 import com.pad.dishmatch.features.calendario.presentation.CalendarioViewModel
+import com.pad.dishmatch.features.conocer.data.ConocerRepositoryImpl
 import com.pad.dishmatch.features.mapa.presentation.MapaScreenRoot
 import com.pad.dishmatch.features.mapa.presentation.MapaViewModel
+import com.pad.dishmatch.features.restaurantes.data.RestauranteRepositoryImpl
 import com.pad.dishmatch.features.restaurantes.presentation.RestauranteScreen
 import com.pad.dishmatch.features.restaurantes.presentation.RecomendacionPlatoScreen
 import com.pad.dishmatch.model.Perfil
@@ -74,7 +76,8 @@ fun App(
 
             val calendarioViewModel = remember { CalendarioViewModel() }
             val mapaViewModel = remember { MapaViewModel() }
-
+            val conocerRepo = remember { ConocerRepositoryImpl() }
+            val restauranteRepo = remember { RestauranteRepositoryImpl() }
             //variables para pasar datos entre pantallas a la hora de pasar de conocer
             //a restaurante y al reves
             var personaElegida by remember { mutableStateOf<Perfil?>(null) }
@@ -185,6 +188,7 @@ fun App(
                 "restaurante" -> RestauranteScreen(
                     miPerfil = perfil,
                     persona = personaElegida,
+                    repository = restauranteRepo,   // <- nuevo
                     onVolverClick = { personaElegida = null; pantallaActual = "principal" },
                     onElegir = { r, luegoPersona ->
                         restauranteElegido = r
@@ -202,6 +206,7 @@ fun App(
                 "conocer" -> ConocerScreen(
                     miPerfil = perfil,
                     restaurante = restauranteElegido,
+                    repository = conocerRepo,       // <- nuevo
                     onVolverClick = { restauranteElegido = null; pantallaActual = "principal" },
                     onQuedar = { p ->
                         personaElegida = p

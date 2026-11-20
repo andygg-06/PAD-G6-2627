@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.pad.dishmatch.features.restaurantes.domain.recomendarPlato
 import com.pad.dishmatch.model.Perfil
 import com.pad.dishmatch.model.Restaurante
 
@@ -36,16 +37,7 @@ fun RecomendacionPlatoScreen(
 ) {
     // Selección del plato con mayor afinidad a la dieta guardada en el perfil
     val platoRecomendado = remember(restaurante, miPerfil) {
-        val carta = restaurante?.carta ?: emptyArray()
-        if (carta.isEmpty()) return@remember null
-
-        if (miPerfil.dieta.isEmpty()) {
-            carta.firstOrNull()
-        } else {
-            carta.maxByOrNull { plato ->
-                plato.tipo.count { it in miPerfil.dieta }
-            } ?: carta.firstOrNull()
-        }
+        restaurante?.let { recomendarPlato(it, miPerfil.dieta) }
     }
 
     Column(

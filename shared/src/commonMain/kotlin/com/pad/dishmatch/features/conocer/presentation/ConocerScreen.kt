@@ -31,44 +31,25 @@ import com.pad.dishmatch.model.AdjRestaurante
 import com.pad.dishmatch.model.Restaurante
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-val candidatos = listOf(
-    Perfil(
-        id = "c1", nombre = "Laura M.", edad = 21,
-        biografia = "Fanática del ramen y la comida asiática.",
-        personalidad = setOf(AdjPersonas.FIESTERO, AdjPersonas.ROMANTICO),
-        dieta = setOf(AdjPlato.VEGETARIANO, AdjPlato.SALUDABLE),
-        estilosRestaurante = setOf(AdjRestaurante.URBANO, AdjRestaurante.ELEGANTE)
-    ),
-    Perfil(
-        id = "c2", nombre = "Carlos G.", edad = 23,
-        biografia = "Busco sitios con platos altos en proteína.",
-        personalidad = setOf(AdjPersonas.ALTO),
-        dieta = setOf(AdjPlato.PROTEINA, AdjPlato.INTOLERANTE_LACTOSA),
-        estilosRestaurante = setOf(AdjRestaurante.URBANO, AdjRestaurante.TRADICIONAL)
-    ),
-    Perfil(
-        id = "c3", nombre = "Elena R.", edad = 20,
-        biografia = "Vegana estricta, busco cafeterías chulas.",
-        personalidad = setOf(AdjPersonas.ROMANTICO),
-        dieta = setOf(AdjPlato.VEGANO, AdjPlato.SALUDABLE),
-        estilosRestaurante = setOf(AdjRestaurante.ELEGANTE)
-    )
-)
+import com.pad.dishmatch.features.conocer.data.ConocerRepositoryImpl
+import com.pad.dishmatch.features.conocer.domain.ConocerRepository
 
-@OptIn(ExperimentalLayoutApi::class)
+//listas de personas en conocer repository
+
 @Composable
 fun ConocerScreen(
     miPerfil: Perfil,
     restaurante: Restaurante?,
     onVolverClick: () -> Unit,
-    onQuedar: (Perfil) -> Unit
-)
- {
+    onQuedar: (Perfil) -> Unit,
+    repository: ConocerRepository = remember { ConocerRepositoryImpl() }
+) {
+    val candidatos = remember { repository.obtenerCandidatos() }
     var indice by remember { mutableStateOf(0) }
     var filtro by remember { mutableStateOf<AdjPlato?>(null) }
     var mensaje by remember { mutableStateOf<String?>(null) }
      var filtroPers by remember { mutableStateOf<AdjPersonas?>(null) }
-    //nuevo, para elegir el filtro
+    //para elegir el filtro
     var usarPerfil by remember { mutableStateOf(false) }
      val lista = if (usarPerfil) {
          candidatos.filter { c ->
@@ -153,7 +134,10 @@ fun ConocerScreen(
 
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         OutlinedButton(onClick = { indice++; mensaje = null }) { Text("Pasar") }
-                        Button(onClick = { onQuedar(actual) }) { //depende de si tenias cita hecha
+                        Button(onClick = {
+                            repository.proponerQuedada(actual.id)
+                            onQuedar(actual)
+                        }) { //depende de si tenias cita hecha
                             Text(if (restaurante != null) "¿Aceptar cita en ${restaurante.nom}?" else "🍽️¡Quedar!")
                         }
                     }
