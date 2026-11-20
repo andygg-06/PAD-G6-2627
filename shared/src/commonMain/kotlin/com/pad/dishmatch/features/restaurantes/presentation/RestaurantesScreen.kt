@@ -36,7 +36,6 @@ import com.pad.dishmatch.model.Perfil
 import com.pad.dishmatch.model.Plato
 import com.pad.dishmatch.model.Restaurante
 
-
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RestauranteScreen(
@@ -44,10 +43,10 @@ fun RestauranteScreen(
     persona: Perfil?,
     repository: RestauranteRepository,
     onVolverClick: () -> Unit,
+    onCrearRestauranteClick: () -> Unit = {},
     onElegir: (Restaurante, Boolean) -> Unit
 ) {
-    //se piden los datos una vez, no cada vez
-    val restaurantes = remember { repository.obtenerRestaurantes() }
+    val restaurantes = repository.obtenerRestaurantes()
     var texto by remember { mutableStateOf("") }
     var estilo by remember { mutableStateOf<AdjRestaurante?>(null) }
     var abierto by remember { mutableStateOf<Restaurante?>(null) }
@@ -74,13 +73,23 @@ fun RestauranteScreen(
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        OutlinedButton(onClick = {
-            if (abierto != null) abierto = null else onVolverClick()
-        }) { Text("← Volver") }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            OutlinedButton(onClick = {
+                if (abierto != null) abierto = null else onVolverClick()
+            }) { Text("← Volver") }
+
+            if (abierto == null) {
+                Button(onClick = onCrearRestauranteClick) {
+                    Text("+ Añadir local")
+                }
+            }
+        }
 
         if (persona != null) Text("Quedada con ${persona.nombre}: restaurantes recomendados")
-
-
 
         val r = abierto
         if (r == null) {
@@ -96,7 +105,6 @@ fun RestauranteScreen(
             if (!soloAptos) {
                 OutlinedTextField(texto, { texto = it }, label = { Text("Buscar") },
                     singleLine = true, modifier = Modifier.fillMaxWidth())
-                //flow para que si hay muchos filtros no se bugueen
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -116,7 +124,7 @@ fun RestauranteScreen(
                     Spacer(Modifier.width(8.dp))
                     Text("Después, elegir con quién quedar")
                 }
-            } //solo si no has elegido persona
+            }
             for (rest in lista) {
                 Card(Modifier.fillMaxWidth().clickable { abierto = rest }) {
                     Column(Modifier.padding(16.dp)) {
