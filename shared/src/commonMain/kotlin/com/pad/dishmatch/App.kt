@@ -24,6 +24,7 @@ import com.pad.dishmatch.features.calendario.presentation.CalendarioViewModel
 import com.pad.dishmatch.features.conocer.data.ConocerRepositoryImpl
 import com.pad.dishmatch.features.mapa.presentation.MapaScreenRoot
 import com.pad.dishmatch.features.mapa.presentation.MapaViewModel
+import com.pad.dishmatch.features.miperfil.data.PerfilRepositoryImpl
 import com.pad.dishmatch.features.restaurantes.data.RestauranteRepositoryImpl
 import com.pad.dishmatch.features.restaurantes.presentation.RestauranteScreen
 import com.pad.dishmatch.features.restaurantes.presentation.RecomendacionPlatoScreen
@@ -67,7 +68,7 @@ fun App(
             val mapaViewModel = remember { MapaViewModel() }
             val conocerRepo = remember { ConocerRepositoryImpl() }
             val restauranteRepo = remember { RestauranteRepositoryImpl() }
-
+            val perfilRepo = remember { PerfilRepositoryImpl(auth) }
             var personaElegida by remember { mutableStateOf<Perfil?>(null) }
             var restauranteElegido by remember { mutableStateOf<Restaurante?>(null) }
             var planPendiente by remember { mutableStateOf<Pair<Perfil, Restaurante>?>(null) }
@@ -157,7 +158,8 @@ fun App(
 
                 "perfil" -> PerfilScreen(
                     perfil = perfil,
-                    onGuardar = { perfil = it; auth.actualizarPerfil(it) },
+                    onGuardar = { perfil = it; perfilRepo.guardarPerfil(it) },
+
                     onVolverClick = { pantallaActual = "principal" },
                     onCerrarSesion = {
                         auth.cerrarSesion()
