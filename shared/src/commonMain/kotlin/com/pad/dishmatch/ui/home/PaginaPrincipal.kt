@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.pad.dishmatch.features.calendario.domain.Cita
 import dishmatch.shared.generated.resources.Res
 import dishmatch.shared.generated.resources.ic_ajustes
 import dishmatch.shared.generated.resources.ic_calendario
@@ -41,6 +42,7 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun PaginaPrincipal(
+    proximaCita: Cita? = null,
     onIrCalendario: () -> Unit,
     onIrMapa: () -> Unit,
     onIrAjustes: () -> Unit,
@@ -88,7 +90,54 @@ fun PaginaPrincipal(
             }
         }
 
-        Spacer(modifier = Modifier.height(22.dp))
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Tarjeta de próxima cita (solo aparece si hay un plan agendado)
+        if (proximaCita != null) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = onIrCalendario),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                )
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("📅", fontSize = 28.sp)
+                    Spacer(modifier = Modifier.width(14.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "TU PRÓXIMO PLAN",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = "Día ${proximaCita.diaMes} a las ${proximaCita.hora}",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                        Text(
+                            text = "Con ${proximaCita.personaNombre} en ${proximaCita.restauranteNombre}",
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
+                    Text(
+                        text = "Ver →",
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 14.sp
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+        }
 
         Text(
             text = "¿Con quién comes hoy?",
