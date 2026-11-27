@@ -65,6 +65,7 @@ fun App(
             var perfil by remember { mutableStateOf(cuenta?.perfil ?: Perfil()) }
 
             val calendarioViewModel = remember { CalendarioViewModel() }
+            val calendarioState by calendarioViewModel.state.collectAsStateWithLifecycle()
             val mapaViewModel = remember { MapaViewModel() }
             val conocerRepo = remember { ConocerRepositoryImpl() }
             val restauranteRepo = remember { RestauranteRepositoryImpl() }
@@ -105,7 +106,7 @@ fun App(
                 )
 
                 "principal" -> PaginaPrincipal(
-                    proximaCita = calendarioViewModel.state.value.citas.firstOrNull(),
+                    proximaCita = calendarioState.todasLasCitas.firstOrNull(),
                     onIrCalendario = { pantallaActual = "calendario" },
                     onIrMapa = { pantallaActual = "mapa" },
                     onIrAjustes = { pantallaActual = "ajustes" },
