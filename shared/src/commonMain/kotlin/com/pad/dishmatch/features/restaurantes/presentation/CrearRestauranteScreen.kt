@@ -54,6 +54,8 @@ fun CrearRestauranteScreen(
     var precioPlato by remember { mutableStateOf("") }
     var etiquetasPlato by remember { mutableStateOf(setOf<AdjPlato>()) }
 
+    var indiceEnEdicion by remember { mutableStateOf<Int?>(null) }
+
     var mensajeError by remember { mutableStateOf<String?>(null) }
 
     Column(
@@ -161,9 +163,10 @@ fun CrearRestauranteScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text(
-                    text = "Carta de platos",
+                    text = if (indiceEnEdicion != null) "Editar plato" else "Carta de platos",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = if (indiceEnEdicion != null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                 )
 
                 Row(
@@ -212,24 +215,48 @@ fun CrearRestauranteScreen(
                     }
                 }
 
-                OutlinedButton(
-                    onClick = {
-                        if (nombrePlato.isNotBlank()) {
-                            val precio = precioPlato.toIntOrNull() ?: 8
-                            val nuevoPlato = Plato(
-                                nom = nombrePlato.trim(),
-                                precio = precio,
-                                tipo = etiquetasPlato.toTypedArray()
-                            )
-                            cartaPlatos = cartaPlatos + nuevoPlato
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            if (nombrePlato.isNotBlank()) {
+                                val precio = precioPlato.toIntOrNull() ?: 8
+                                val platoActualizado = Plato(
+                                    nom = nombrePlato.trim(),
+                                    precio = precio,
+                                    tipo = etiquetasPlato.toTypedArray()
+                                )
+                                val idx = indiceEnEdicion
+                                if (idx != null && idx in cartaPlatos.indices) {
+                                    // Actualizar el plato existente
+                                    cartaPlatos = cartaPlatos.toMutableList().also { it[idx] = platoActualizado }
+                                    indiceEnEdicion = null
+                                } else {
+                                    // Añadir un plato nuevo
+                                    cartaPlatos = cartaPlatos + platoActualizado
+                                }
+                                nombrePlato = ""
+                                precioPlato = ""
+                                etiquetasPlato = emptySet()
+                            }
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(if (indiceEnEdicion != null) "✓ Guardar cambios" else "+ Añadir plato")
+                    }
+
+                    if (indiceEnEdicion != null) {
+                        OutlinedButton(onClick = {
+                            indiceEnEdicion = null
                             nombrePlato = ""
                             precioPlato = ""
                             etiquetasPlato = emptySet()
+                        }) {
+                            Text("Cancelar")
                         }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("+ Añadir plato a la carta")
+                    }
                 }
 
                 if (cartaPlatos.isNotEmpty()) {
@@ -239,7 +266,7 @@ fun CrearRestauranteScreen(
                         fontWeight = FontWeight.SemiBold
                     )
 
-                    for (plato in cartaPlatos) {
+                    cartaPlatos.forEachIndexed { index, plato ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -258,8 +285,28 @@ fun CrearRestauranteScreen(
                                 }
                             }
                             Text("${plato.precio} €", fontWeight = FontWeight.Bold)
-                            TextButton(onClick = { cartaPlatos = cartaPlatos - plato }) {
-                                Text("✕")
+                            
+                            // Editar
+                            TextButton(onClick = {
+                                indiceEnEdicion = index
+                                nombrePlato = plato.nom
+                                precioPlato = plato.precio.toString()
+                                etiquetasPlato = plato.tipo.toSet()
+                            }) {
+                                Text("✏️")
+                            }
+
+                            // Eliminar
+                            TextButton(onClick = {
+                                if (indiceEnEdicion == index) {
+                                    indiceEnEdicion = null
+                                    nombrePlato = ""
+                                    precioPlato = ""
+                                    etiquetasPlato = emptySet()
+                                }
+                                cartaPlatos = cartaPlatos.filterIndexed { i, _ -> i != index }
+                            }) {
+                                Text("🗑️")
                             }
                         }
                     }
@@ -301,7 +348,5 @@ fun CrearRestauranteScreen(
         ) {
             Text("Guardar restaurante")
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }
