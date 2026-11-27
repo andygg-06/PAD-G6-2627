@@ -24,7 +24,10 @@
     <string name="registro_nombre">Nombre</string>
     <string name="registro_password">Contraseña (mín. 8)</string>
     <string name="registro_repetir">Repite la contraseña</string>
-    <string name="registro_consentimiento">Acepto expresamente que DishMatch guarde mis datos de dieta y alergias para recomendarme restaurantes y personas compatibles. Es opcional y puedo retirarlo cuando quiera.</string>
+    <string name="registro_consentimiento">
+        Acepto expresamente que DishMatch guarde mis datos de dieta y alergias para recomendarme
+        restaurantes y personas compatibles. Es opcional y puedo retirarlo cuando quiera.
+    </string>
     <string name="registro_boton">Crear cuenta</string>
 
     <!-- ===================== Errores de autenticación (Cuenta.kt / AuthRepositoryImpl.kt) ===================== -->
