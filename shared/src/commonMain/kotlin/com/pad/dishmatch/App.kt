@@ -105,6 +105,7 @@ fun App(
                 )
 
                 "principal" -> PaginaPrincipal(
+                    proximaCita = calendarioViewModel.state.value.citas.firstOrNull(),
                     onIrCalendario = { pantallaActual = "calendario" },
                     onIrMapa = { pantallaActual = "mapa" },
                     onIrAjustes = { pantallaActual = "ajustes" },
